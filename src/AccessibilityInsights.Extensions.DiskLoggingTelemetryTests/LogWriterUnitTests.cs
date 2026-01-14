@@ -27,7 +27,7 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
         [TestMethod]
         public void Ctor_TimeProviderIsNull_ThrowsArgumentNullException()
         {
-            ArgumentNullException e = Assert.ThrowsException<ArgumentNullException>
+            ArgumentNullException e = Assert.Throws<ArgumentNullException>
                 (() => new LogWriter(null, _logFileHelperMock.Object));
             Assert.AreEqual("timeProvider", e.ParamName);
         }
@@ -35,7 +35,7 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
         [TestMethod]
         public void Ctor_LogFileHelperIsNull_ThrowsArgumentNullException()
         {
-            ArgumentNullException e = Assert.ThrowsException<ArgumentNullException>
+            ArgumentNullException e = Assert.Throws<ArgumentNullException>
                 (() => new LogWriter(() => TestTime, null));
             Assert.AreEqual("logFileHelper", e.ParamName);
         }
@@ -84,7 +84,7 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
             _testSubject.LogThisData(expectedTitle, expectedData);
 
             _logFileHelperMock.VerifyAll();
-            Assert.AreEqual(3, actualLines.Count);
+            Assert.HasCount(3, actualLines);
             Assert.AreEqual("--------------------------------------------------", actualLines[0]);
             Assert.AreEqual("My title at 2022-03-18T20:06:10.0000000Z", actualLines[1]);
             Assert.AreEqual(expectedData, actualLines[2]);

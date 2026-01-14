@@ -62,7 +62,7 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
         {
             Assert.IsNotNull(dictionary1);
             Assert.IsNotNull(dictionary2);
-            Assert.AreEqual(dictionary1.Count, dictionary2.Count);
+            Assert.HasCount(dictionary1.Count, dictionary2);
             foreach (KeyValuePair<string, string> pairFrom1 in dictionary1)
             {
                 Assert.AreEqual(pairFrom1.Value, dictionary2[pairFrom1.Key]);
@@ -79,7 +79,7 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
         [TestMethod]
         public void Ctor_LogWriterIsNull_ThrowsArgumentNUllException()
         {
-            ArgumentNullException e = Assert.ThrowsException<ArgumentNullException>
+            ArgumentNullException e = Assert.Throws<ArgumentNullException>
                 (() => new LocalTelemetry(null));
             Assert.AreEqual("logWriter", e.ParamName);
         }
@@ -217,9 +217,9 @@ namespace AccessibilityInsights.Extensions.DiskLoggingTelemetryTests
             _logWriterMock
                 .Setup(x => x.LogThisData(ReportExceptionTitle, It.IsAny<string>()))
                 .Callback<string, string>((_, data) =>
-                 {
-                     exceptionData = ExceptionDataFromJson(data);
-                 });
+                {
+                    exceptionData = ExceptionDataFromJson(data);
+                });
 
             _testSubject.ReportException(TestException);
 
