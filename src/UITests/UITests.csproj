@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>UITests</AssemblyName>
@@ -9,12 +9,14 @@
   <Import Project="..\..\build\NetFrameworkTest.targets" />
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Actions\Actions.csproj" />
+    <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Desktop\Desktop.csproj" />
     <ProjectReference Include="..\AccessibilityInsights\AccessibilityInsights.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="8.0.1" />
-    <PackageReference Include="Axe.Windows" Version="2.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
