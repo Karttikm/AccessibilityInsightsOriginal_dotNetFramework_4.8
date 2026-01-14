@@ -1,0 +1,82 @@
+﻿# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+# This template contains jobs to build and run unit tests
+
+parameters:
+  configuration: ''
+  checkLicenseHeaders: ''
+  runComponentGovernance: ''
+
+jobs:
+- job: BuildAndUnitTests${{ parameters.configuration }}
+  displayName: Build and run unit tests - ${{ parameters.configuration }}
+  condition: succeeded()
+  templateContext:
+    outputs:
+      - output: buildArtifacts
+        artifactName: drop
+        displayName: 'Publish Artifact: drop'
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+  pool:
+    name: $(a11yInsightsPool)
+    image: windows-2022-secure
+    os: windows
+  steps:
+  - ${{ if eq(parameters.checkLicenseHeaders, 'true') }}:
+    - task: PowerShell@2
+      displayName: 'License Header Check'
+      inputs:
+        targetType: "filePath"
+        filePath: tools\scripts\verification.scripts\LicenseHeaderVerification.ps1
+        arguments: '-target  $(Build.Repository.LocalPath) -licenseHeaderPath tools\scripts\verification.scripts\LicenseHeader.txt -extensions *.xaml,*.xml,*.cs,*.ps1,*.yml,*.targets -addIfAbsent $false'
+
+  - task: NuGetToolInstaller@1
+    displayName: 'Use NuGet 5.x'
+    inputs:
+      versionSpec: '5.x'
+
+  - task: CmdLine@2
+    displayName: 'Show environment variables'
+    inputs:
+      script: set
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet restore'
+    inputs:
+      command: restore
+      projects: |
+        **\*.csproj
+        !**\CustomActions.Package.csproj
+
+  - task: VSBuild@1
+    displayName: 'Build Solution **\*.sln'
+    inputs:
+      vsVersion: 17.0
+      platform: '$(BuildPlatform)'
+      configuration: ${{ parameters.configuration }}
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      Contents: ${{ format('**\bin\{0}\**', parameters.configuration) }}
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: VSTest@2
+    displayName: 'Test Assemblies **\*test*.dll;-:**\obj\**'
+    inputs:
+      testAssemblyVer2: |
+        **\*test*.dll
+        !**\obj\**
+      codeCoverageEnabled: true
+      platform: '$(BuildPlatform)'
+      configuration: ${{ parameters.configuration }}
+      rerunFailedTests: true
+      runSettingsFile: $(Build.SourcesDirectory)/src/UITests//UITests.runsettings
+      testFiltercriteria: 'TestCategory!=UITest'
+
+  - ${{ if eq(parameters.runComponentGovernance, 'true') }}:
+    - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+      displayName: 'Component Detection'

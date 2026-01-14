@@ -1,0 +1,8 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- If this is a mandatory update for the Production ReleaseChannel, set this to true, otherwise leave it as false.
+         This should only be set to true for things like a security update, and should be reset to false immediately
+         after that version has released to Production-->
+    <IsMandatoryProdUpdate Condition="$(IsMandatoryProdUpdate) == ''">false</IsMandatoryProdUpdate>
+  </PropertyGroup>
+</Project>

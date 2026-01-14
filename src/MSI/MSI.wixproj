@@ -1,0 +1,52 @@
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="4.0.1" />
+
+  <PropertyGroup>
+    <OutputName>AccessibilityInsights</OutputName>
+    <Revision Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER.Substring($(BUILD_BUILDNUMBER.LastIndexOf(`.`))))</Revision>
+    <Revision Condition=" '$(BUILD_BUILDNUMBER)' == '' ">.1</Revision>
+    <CurrentDateString Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER.Substring(0, $(BUILD_BUILDNUMBER.LastIndexOf(`.`))))</CurrentDateString>
+    <CurrentDateString Condition=" '$(BUILD_BUILDNUMBER)' == '' ">$([System.DateTime]::Now.ToString(`yyyy-MM-dd`))</CurrentDateString>
+    <CountDate>$([System.DateTime]::ParseExact(`2017-01-01`,`yyyy-MM-dd`,null))</CountDate>
+    <BuildNumber>1.1.$([System.Math]::Round($([System.DateTime]::ParseExact($(CurrentDateString),`yyyy-MM-dd`,null).Subtract($(CountDate)).TotalDays)).ToString(`0000`))$(Revision)</BuildNumber>
+    <IsPackage>true</IsPackage>
+    <SignOutput>true</SignOutput>
+    <Name>MSI</Name>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug;BuildVer=$(BuildNumber);</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineConstants>BuildVer=$(BuildNumber);</DefineConstants>
+    <SuppressSpecificWarnings>1076;69</SuppressSpecificWarnings>
+  </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.NetFx.wixext" Version="4.0.5" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.5" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.5" />
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AccessibilityInsights.CustomActions.Package\CustomActions.Package.csproj" />
+    <ProjectReference Include="..\AccessibilityInsights.VersionSwitcher\VersionSwitcher.csproj" />
+    <ProjectReference Include="..\AccessibilityInsights\AccessibilityInsights.csproj" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="4.0.1" />
+
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(OutputPath)AccessibilityInsights.msi" DestinationFolder="$(OutputPath)\msi\$(BuildNumber)" ContinueOnError="true" />
+  </Target>
+</Project>

@@ -1,0 +1,115 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using AccessibilityInsights.SetupLibrary;
+using AccessibilityInsights.VersionSwitcher;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace ManifestTests
+{
+    [TestClass]
+    public class IntegrationTests
+    {
+        private static readonly string RawManifestFilePath = Path.GetFullPath(Path.Combine(@"..\..\..\..", @"Manifest\bin\Release\net48\ReleaseInfo.json"));
+        private static readonly string SignedManifestFilePath = Path.GetFullPath(Path.Combine(@"..\..\..\..", @"Manifest\bin\Release\net48\AccessibilityInsights.Manifest.dll"));
+        private static readonly string MsiFilePath = Path.GetFullPath(Path.Combine(@"..\..\..\..", @"MSI\bin\x86\Release\AccessibilityInsights.msi"));
+        private static readonly ChannelInfo rawInfo = FileHelpers.LoadDataFromJSON<ChannelInfo>(RawManifestFilePath);
+
+        [TestMethod]
+        public void MsiFileEists()
+        {
+            Assert.IsTrue(File.Exists(MsiFilePath), $"Can't find MSI file at {MsiFilePath}");
+        }
+
+        [TestMethod]
+        public void RawManifestFileExists()
+        {
+            Assert.IsTrue(File.Exists(RawManifestFilePath), $"Can't find raw manifest file at {RawManifestFilePath}");
+        }
+
+        [TestMethod]
+        public void EmbeddedManifestFileExists()
+        {
+            Assert.IsTrue(File.Exists(SignedManifestFilePath), $"Can't find signed manifest file at {SignedManifestFilePath}");
+        }
+
+        [TestMethod]
+        public void MsiFileSizeIsCorrectInRawManifest()
+        {
+            Assert.AreEqual(new FileInfo(MsiFilePath).Length, rawInfo.MsiSizeInBytes);
+        }
+
+        [TestMethod]
+        public void MsiSha512IsCorrectInRawManifest()
+        {
+            Assert.AreEqual(InstallationEngine.ComputeSha512(MsiFilePath), rawInfo.MsiSha512);
+        }
+
+        [TestMethod]
+        public void MinimumVersionIsNullInRawManifest()
+        {
+            Assert.IsNull(rawInfo.MinimumVersion);
+        }
+
+        [TestMethod]
+        public void EmbeddedManifestMatchesRawManifest()
+        {
+            using (Stream stream = new FileStream(SignedManifestFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                stream.Position = 0;
+
+#if ENABLE_SIGNING
+                Func<Stream, bool> signingOverride = null;          // Enforces signing requirement
+#else
+                Func<Stream, bool> signingOverride = (_) => true;   // Bypasses signing requirement
+#endif
+                ChannelInfo signedInfo = ChannelInfoUtilities.GetChannelInfoFromSignedManifest(stream, signingOverride);
+
+                Assert.IsNotNull(signedInfo);
+                Assert.AreEqual(rawInfo.MsiSizeInBytes, signedInfo.MsiSizeInBytes);
+                Assert.AreEqual(rawInfo.MsiSha512, signedInfo.MsiSha512);
+                Assert.AreEqual(rawInfo.InstallAsset, signedInfo.InstallAsset);
+                Assert.AreEqual(rawInfo.ReleaseNotesAsset, signedInfo.ReleaseNotesAsset);
+                Assert.AreEqual(rawInfo.CurrentVersion, signedInfo.CurrentVersion);
+                Assert.AreEqual(rawInfo.ProductionMinimumVersion, signedInfo.ProductionMinimumVersion);
+                Assert.AreEqual(rawInfo.MinimumVersion, signedInfo.MinimumVersion);
+
+                string isMandatoryProdUpdate = Environment.GetEnvironmentVariable("IsMandatoryProdUpdate");
+
+                if (isMandatoryProdUpdate == "true")
+                {
+                    Assert.AreEqual(rawInfo.CurrentVersion, rawInfo.ProductionMinimumVersion);
+                }
+                else
+                {
+                    Assert.IsTrue(string.IsNullOrEmpty(isMandatoryProdUpdate) || isMandatoryProdUpdate == "false",
+                        "The IsMandatoryProdUpdate environment variable must be 'true' or 'false' (case sensitive) if it is set.");
+                    Assert.IsTrue(rawInfo.CurrentVersion > rawInfo.ProductionMinimumVersion,
+                        "This is not a mandatory prod update. CurrentVersion must be newer than ProductionMininmumVersion");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ArtifactContentsAreCorrect()
+        {
+            string folder = Path.GetDirectoryName(Path.GetFullPath(SignedManifestFilePath));
+            HashSet<string> expectedFiles = new HashSet<string>(new string[] 
+            {
+                Path.Combine(folder, "AccessibilityInsights.Manifest.dll"), 
+                Path.Combine(folder, "ReleaseInfo.json"),
+            });
+
+            foreach (string file in Directory.EnumerateFiles(folder, "*.*", SearchOption.AllDirectories))
+            {
+                Assert.IsTrue(expectedFiles.Contains(file), $"Did not expect '{file}' in output folder");
+                expectedFiles.Remove(file);
+            }
+
+            Assert.AreEqual(0, expectedFiles.Count, $"Missing files: {string.Join(", ", expectedFiles)}");
+        }
+    }
+}

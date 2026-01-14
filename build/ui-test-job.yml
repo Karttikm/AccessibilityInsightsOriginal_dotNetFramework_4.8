@@ -1,0 +1,55 @@
+﻿# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+# This template contains jobs to run UI tests using WinAppDriver.
+
+parameters:
+  configuration: ''
+
+jobs:
+- job: UITests${{ parameters.configuration }}
+  displayName: Build and run UI Tests - ${{ parameters.configuration }}
+  condition: succeeded()
+  pool:
+    name: $(a11yInsightsPool) # Name of your hosted pool
+    image: windows-2022-secure # Name of the image in your pool. If not specified, first image of the pool is used
+    os: windows # OS of the image. Allowed values: windows, linux, macOS
+  steps:
+  - task: NuGetToolInstaller@1
+    displayName: 'Use NuGet 5.x'
+    inputs:
+      versionSpec: '5.x'
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+
+  - task: VSBuild@1
+    displayName: 'Build Solution **\*.sln'
+    inputs:
+      vsVersion: 17.0
+      platform: '$(BuildPlatform)'
+      configuration: ${{ parameters.configuration }}
+
+  - task: WinAppDriver.winappdriver-pipelines-task.winappdriver-pipelines-task.Windows Application Driver@0
+    displayName: 'Start - WinAppDriver'
+    inputs:
+      AgentResolution: 1080p
+
+  - task: VSTest@2
+    displayName: 'Test Assemblies **\release\*test*.dll;-:**\obj\**'
+    inputs:
+      testAssemblyVer2: |
+        **\*test*.dll
+        !**\obj\**
+      platform: '$(BuildPlatform)'
+      configuration: ${{ parameters.configuration }}
+      runSettingsFile: $(Build.SourcesDirectory)/src/UITests//UITests.runsettings
+      testFiltercriteria: 'TestCategory=Integration&TestCategory!=LiveMode'
+      rerunFailedTests: true
+      rerunType: basedOnTestFailureCount
+      rerunFailedTestCasesMaxLimit: 100 # Rerun even if all UI tests fail on a given run (much larger than count of tests)
+
+  - task: WinAppDriver.winappdriver-pipelines-task.winappdriver-pipelines-task.Windows Application Driver@0
+    displayName: 'Stop - WinAppDriver'
+    continueOnError: true
+    inputs:
+      OperationType: Stop

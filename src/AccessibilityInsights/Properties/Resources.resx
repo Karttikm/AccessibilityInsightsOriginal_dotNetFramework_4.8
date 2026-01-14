@@ -1,0 +1,587 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnAccountConfigAutomationPropertiesHelpText" xml:space="preserve">
+    <value>Sign into AzureDevOps and configure sign in settings</value>
+  </data>
+  <data name="btnAccountConfigAutomationPropertiesName" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="btnAccountConfigToolTip" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="btnCCAAutomationPropertiesName" xml:space="preserve">
+    <value>Color contrast analyzer</value>
+  </data>
+  <data name="btnCCAToolTip" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="btnCloseAutomationPropertiesName" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="btnClose_ClickDebugMessage" xml:space="preserve">
+    <value>Enter: Close Button Click</value>
+  </data>
+  <data name="btnConfigAutomationPropertiesHelpText" xml:space="preserve">
+    <value>Configure settings of Accessibility Insights for Windows</value>
+  </data>
+  <data name="btnConfigAutomationPropertiesName" xml:space="preserve">
+    <value>Application Settings</value>
+  </data>
+  <data name="btnConfigToolTip" xml:space="preserve">
+    <value>Change settings...</value>
+  </data>
+  <data name="PleaseMoveBackToLiveDialogMessage" xml:space="preserve">
+    <value>Please stop listening first to move back to live.</value>
+  </data>
+  <data name="btnHelpAutomationPropertiesHelpText" xml:space="preserve">
+    <value>Show documentation on how to use</value>
+  </data>
+  <data name="btnHelpAutomationPropertiesName" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="btnHelpToolTip" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="btnHilighterAutomationPropertiesNameOff" xml:space="preserve">
+    <value>Highlighter Off</value>
+  </data>
+  <data name="btnHilighterAutomationPropertiesNameOn" xml:space="preserve">
+    <value>Highlighter On</value>
+  </data>
+  <data name="btnInspectAutomationPropertiesName" xml:space="preserve">
+    <value>Inspect mode</value>
+  </data>
+  <data name="btnInspectToolTip" xml:space="preserve">
+    <value>Inspect</value>
+  </data>
+  <data name="btnLoadAutomationPropertiesName" xml:space="preserve">
+    <value>Load test or event file</value>
+  </data>
+  <data name="btnLoad_ClickDialogTitle" xml:space="preserve">
+    <value>Load Accessibility Insights for Windows file</value>
+  </data>
+  <data name="btnMaxAutomationPropertiesName" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="btnMinAutomationPropertiesName" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="btnPauseAutomationPropertiesNameOff" xml:space="preserve">
+    <value>Resume UI Automation Tree</value>
+  </data>
+  <data name="btnPauseAutomationPropertiesNameOn" xml:space="preserve">
+    <value>Pause UI Automation Tree</value>
+  </data>
+  <data name="btnRefreshAutomationPropertiesName" xml:space="preserve">
+    <value>Rerun tests</value>
+  </data>
+  <data name="btnRefreshToolTip" xml:space="preserve">
+    <value>Rerun tests</value>
+  </data>
+  <data name="btnSaveAutomationPropertiesName" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btnTestAutomationPropertiesName" xml:space="preserve">
+    <value>Tests FastPass mode</value>
+  </data>
+  <data name="btnTestToolTip" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="btnTimerAutomationPropertiesName" xml:space="preserve">
+    <value>Timer</value>
+  </data>
+  <data name="btnTimer_ClickMessage" xml:space="preserve">
+    <value>Please enter integer number to set delay second(s).</value>
+  </data>
+  <data name="cbiElementAutomationPropertiesName" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="cbiElementContent" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="cbiEntireAppAutomationPropertiesName" xml:space="preserve">
+    <value>Entire app</value>
+  </data>
+  <data name="cbiEntireAppContent" xml:space="preserve">
+    <value>Entire app</value>
+  </data>
+  <data name="cbSelectionScopeAutomationPropertiesName" xml:space="preserve">
+    <value>What to select</value>
+  </data>
+  <data name="ctrlConfigurationModeAutomationPropertiesName" xml:space="preserve">
+    <value>Content container</value>
+  </data>
+  <data name="miTimerAutomationPropertiesName" xml:space="preserve">
+    <value>Start test in 5 seconds</value>
+  </data>
+  <data name="ModeIsEnabled" xml:space="preserve">
+    <value>mode is enabled</value>
+  </data>
+  <data name="onClosedDebugMessage" xml:space="preserve">
+    <value>Error: MainWindow Closed</value>
+  </data>
+  <data name="SupportDebuggingDialogMessage" xml:space="preserve">
+    <value>Attach now</value>
+  </data>
+  <data name="tbComboboxLabelText" xml:space="preserve">
+    <value>What to select:</value>
+  </data>
+  <data name="tbTimerText1" xml:space="preserve">
+    <value>Start Test in</value>
+  </data>
+  <data name="tbTimerText2" xml:space="preserve">
+    <value>second(s)</value>
+  </data>
+  <data name="Window_ClosingDebugMessage" xml:space="preserve">
+    <value>Enter: Closing MainWindow</value>
+  </data>
+  <data name="Window_ClosingException" xml:space="preserve">
+    <value>Exception while closing MainWindow</value>
+  </data>
+  <data name="btnOkContent" xml:space="preserve">
+    <value>Save and close</value>
+  </data>
+  <data name="CCAModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Test start up page</value>
+  </data>
+  <data name="colorContrast" xml:space="preserve">
+    <value>Color Contrast analyzer</value>
+  </data>
+  <data name="ConfigurationModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Settings page</value>
+  </data>
+  <data name="ConfigurationModeControl_VersionSwitcherException" xml:space="preserve">
+    <value>Accessibility Insights for Windows was unable to change channels. Please check your internet connection and try again later.</value>
+  </data>
+  <data name="ctrlTabsAutomationPropertiesName" xml:space="preserve">
+    <value>Event information</value>
+  </data>
+  <data name="ctrlTabsElementAutomationPropertiesName" xml:space="preserve">
+    <value>Element information</value>
+  </data>
+  <data name="EventModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Event page</value>
+  </data>
+  <data name="events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="gdConfigBtnCloseAutomationPropertiesName" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="gdConfigLabelContent" xml:space="preserve">
+    <value>SETTINGS</value>
+  </data>
+  <data name="gsMidAutomationPropertiesHelpText" xml:space="preserve">
+    <value>change horizontal size of Hierarchy pane</value>
+  </data>
+  <data name="gsMidAutomationPropertiesName" xml:space="preserve">
+    <value>splitter for Hierarchy pane</value>
+  </data>
+  <data name="HandleFailedSelectionResetConnectionLostMessage" xml:space="preserve">
+    <value>Accessibility Insights has lost the connection to the application. Select the application or element and run tests again.</value>
+  </data>
+  <data name="HandleLogoutRequestSignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="HandleRequestRecordingByHotkeySelectElementMessage" xml:space="preserve">
+    <value>Please select an element first before starting Event page.</value>
+  </data>
+  <data name="hlLink_RequestNavigateException" xml:space="preserve">
+    <value>Failed to open link.</value>
+  </data>
+  <data name="liveInspect" xml:space="preserve">
+    <value>Live Inspect</value>
+  </data>
+  <data name="LiveModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Live Inspect page</value>
+  </data>
+  <data name="noScreenShotAvailableMessage" xml:space="preserve">
+    <value>The element's bounding rectangle is empty (app minimized?)- no screenshot is available.</value>
+  </data>
+  <data name="paused" xml:space="preserve">
+    <value>Paused</value>
+  </data>
+  <data name="resultsInUIATree" xml:space="preserve">
+    <value>Results in UI Automation Tree</value>
+  </data>
+  <data name="SetElementCultureInfoFormatMessage" xml:space="preserve">
+    <value>Only the first {0:N0} elements are being scanned. You will not be able to save the results or file any bugs from this scan.</value>
+  </data>
+  <data name="SetElementException" xml:space="preserve">
+    <value>Can't initiate Event recording, please go back to Inspect mode and select an element again.</value>
+  </data>
+  <data name="SnapshotModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Test Inspect page</value>
+  </data>
+  <data name="StartElementDetailViewNoElementIsSelectedMessage" xml:space="preserve">
+    <value>No element is selected. please select an element first.</value>
+  </data>
+  <data name="StartEventsModeElementNotAvailableMessage" xml:space="preserve">
+    <value>The select element is not available any more, please select a new one.</value>
+  </data>
+  <data name="StartLoadingSnapshotLoadFileException" xml:space="preserve">
+    <value>Unable to load the selected file.
+Please ensure that you are opening a valid test file using the most recent release of Accessibility Insights for Windows (https://aka.ms/AccessibilityInsights).</value>
+  </data>
+  <data name="tabControlLabelContent" xml:space="preserve">
+    <value>FastPass</value>
+  </data>
+  <data name="tbiAutomatedChecksAutomationPropertiesName" xml:space="preserve">
+    <value>Automated checks in FastPass</value>
+  </data>
+  <data name="tbiAutomatedChecksHeader" xml:space="preserve">
+    <value>Automated Checks</value>
+  </data>
+  <data name="tbiTabStopAutomationPropertiesName" xml:space="preserve">
+    <value>Tab stops in FastPass</value>
+  </data>
+  <data name="tbiTabStopHeader" xml:space="preserve">
+    <value>Tab Stops</value>
+  </data>
+  <data name="tcTabsAboutHeader" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="tcTabsApplicationHeader" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="tcTabsConnectionHeader" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="TestModeControlAutomationPropertiesName" xml:space="preserve">
+    <value>Test page</value>
+  </data>
+  <data name="tests" xml:space="preserve">
+    <value>Tests</value>
+  </data>
+  <data name="TitleTextMapCCA" xml:space="preserve">
+    <value>Color contrast</value>
+  </data>
+  <data name="TitleTextMapEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="TitleTextMapEventsLoad" xml:space="preserve">
+    <value>Events (Loaded data)</value>
+  </data>
+  <data name="TitleTextMapEventsRecord" xml:space="preserve">
+    <value>Events (Recording)</value>
+  </data>
+  <data name="TitleTextMapEventsStopped" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="TitleTextMapExit" xml:space="preserve">
+    <value>Exiting...</value>
+  </data>
+  <data name="TitleTextMapInspectLive" xml:space="preserve">
+    <value>Inspect - Live</value>
+  </data>
+  <data name="TitleTextMapInspectScan" xml:space="preserve">
+    <value>Inspect (Scanning)</value>
+  </data>
+  <data name="TitleTextMapStart" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TitleTextMapTestElementDetails" xml:space="preserve">
+    <value>Test - Element details</value>
+  </data>
+  <data name="TitleTextMapTestHowToFix" xml:space="preserve">
+    <value>Test - How to Fix</value>
+  </data>
+  <data name="TitleTextMapTestNoSelection" xml:space="preserve">
+    <value>Test - No selection</value>
+  </data>
+  <data name="TitleTextMapTestResults" xml:space="preserve">
+    <value>Test - Test results</value>
+  </data>
+  <data name="TitleTextMapTestScan" xml:space="preserve">
+    <value>Test (Scanning)</value>
+  </data>
+  <data name="TitleTextMapTestTabStops" xml:space="preserve">
+    <value>Test - Tab Stops</value>
+  </data>
+  <data name="LiveModeControl_HoverOverElement" xml:space="preserve">
+    <value>To begin inspecting a UI Automation element, hover over the element within the target application or set keyboard focus on the element. To inspect its properties, bring focus back to Accessibility Insights for Windows by pressing</value>
+  </data>
+  <data name="LiveModeControl_LearnMoreInspect" xml:space="preserve">
+    <value>Learn more about Inspect</value>
+  </data>
+  <data name="TestModeControl_RunAutomatedChecks" xml:space="preserve">
+    <value>To run automated checks, select the Inspect tab</value>
+  </data>
+  <data name="TestModeControl_HoverAndTest" xml:space="preserve">
+    <value>or press Ctrl + I to go to Inspect mode, hover over the element within the target application, and select the Test icon</value>
+  </data>
+  <data name="LiveModeControl_RunAutomatedChecks" xml:space="preserve">
+    <value>To run automated checks, hover over the element within the target application and select the Test icon</value>
+  </data>
+  <data name="LiveModeControl_FocusOnElement" xml:space="preserve">
+    <value>. You can also focus on the element, then press</value>
+  </data>
+  <data name="LiveModeControl_LearnMoreAutomated" xml:space="preserve">
+    <value>Learn more about automated checks</value>
+  </data>
+  <data name="LiveModeControl_CopyToClipboard_Available_properties" xml:space="preserve">
+    <value>Available properties</value>
+  </data>
+  <data name="LiveModeControl_CopyToClipboard_Glimpse_0" xml:space="preserve">
+    <value>Glimpse: {0}</value>
+    <comment>{0} is the glimpse</comment>
+  </data>
+  <data name="MainWindow_UpdateTitleString_Accessibility_Insights_for_Windows_0" xml:space="preserve">
+    <value>Accessibility Insights for Windows - {0}</value>
+    <comment>Title String. {0} describes the current POI and view</comment>
+  </data>
+  <data name="MainWindowWindowTitle" xml:space="preserve">
+    <value>Accessibility Insights for Windows</value>
+  </data>
+  <data name="MainWindow_AutomationPropertiesName_0_1_2" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+    <comment>{0} is the property name; {1} is the current page; {2} is a boolean reflecting the enabled state</comment>
+  </data>
+  <data name="CultureInfoErrorMessage" xml:space="preserve">
+    <value>"{0}" is not proper hotkey combination. Hotkey should be [Shift|Ctrl|Alt|Window]+[a single key including function key]</value>
+    <comment>{0} is the invalid hotkey combination</comment>
+  </data>
+  <data name="VersionBarPreReleaseVersion" xml:space="preserve">
+    <value>Prerelease Build ({0})</value>
+    <comment>{0} receives the build version</comment>
+  </data>
+  <data name="SetElementInspectTestDetail" xml:space="preserve">
+    <value>Inspect Test Detail of {0}</value>
+    <comment>{0} is the glimpse</comment>
+  </data>
+  <data name="SaveException" xml:space="preserve">
+    <value>Couldn't save the file: {0}</value>
+    <comment>{0} is the message of the save exception</comment>
+  </data>
+  <data name="UpdateMainWindowLoginFieldsSignedInAs" xml:space="preserve">
+    <value>Signed into {0}</value>
+  </data>
+  <data name="bdLeftNavAutomationPropertiesName" xml:space="preserve">
+    <value>Navigation Bar</value>
+  </data>
+  <data name="ImageAutomationPropertiesName" xml:space="preserve">
+    <value>icon</value>
+  </data>
+  <data name="ictMainMenuBottopAutomationPropertiesName" xml:space="preserve">
+    <value>Global menus</value>
+  </data>
+  <data name="ctrlNamedCommandbarAutomationPropertiesName" xml:space="preserve">
+    <value>Command bar</value>
+  </data>
+  <data name="btnConfigAutomationPropertiesNameNoBugFiling" xml:space="preserve">
+    <value>Application Settings</value>
+  </data>
+  <data name="LocalizedControlType_Page" xml:space="preserve">
+    <value>page</value>
+  </data>
+  <data name="AutomatedChecksRole" xml:space="preserve">
+    <value>Did you know? Automated checks can detect some common accessibility problems, such as missing or invalid properties. However, most accessibility problems can be identified only through manual testing.</value>
+  </data>
+  <data name="PanesCanBeSetOnlyOnce" xml:space="preserve">
+    <value>Panes can be set only once</value>
+    <comment>Description</comment>
+  </data>
+  <data name="OptionalUpdateFailedUnknown" xml:space="preserve">
+    <value>There was a problem updating the application. Please check your internet connection and try again.</value>
+  </data>
+  <data name="RequiredUpdateFailedUnknown" xml:space="preserve">
+    <value>There was a problem updating the application. Because this is a required update, the app will be shut down. Please check your internet connection and try again.</value>
+  </data>
+  <data name="SentenceEndPeriod" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="SnapshotModeControl_AvailablePatterns" xml:space="preserve">
+    <value>Available patterns:</value>
+  </data>
+  <data name="SnapshotModeControl_AvailableProperties" xml:space="preserve">
+    <value>Available properties</value>
+  </data>
+  <data name="SnapshotModeControl_GlimpseFormat" xml:space="preserve">
+    <value>Glimpse: {0}</value>
+    <comment>{0} is the glimpse</comment>
+  </data>
+  <data name="MainWindow_DefaultTimerDelayInSeconds" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="MainWindow_One" xml:space="preserve">
+    <value>One</value>
+  </data>
+  <data name="MainWindow_QuestionMark" xml:space="preserve">
+    <value>_?</value>
+  </data>
+  <data name="MainWindow_Two" xml:space="preserve">
+    <value>Two</value>
+  </data>
+  <data name="ColorContrast_NoElementSelected" xml:space="preserve">
+    <value>No Element Selected!</value>
+  </data>
+  <data name="ColorContrast_RatioAndConfidenceFormat" xml:space="preserve">
+    <value>Ratio: {0}
+Confidence: {1}</value>
+    <comment>{0} is the ratio; {1} is the confidence</comment>
+  </data>
+  <data name="ColorContrast_UnableToDetectColors" xml:space="preserve">
+    <value>Unable to detect colors!</value>
+  </data>
+  <data name="ColorContrast_UnknownElementType" xml:space="preserve">
+    <value>Unknown Element Type!</value>
+  </data>
+  <data name="LiveModeControl_AvailablePatterns" xml:space="preserve">
+    <value>Available patterns:</value>
+  </data>
+  <data name="LiveModeControl_LiveInspectWithFormat" xml:space="preserve">
+    <value>Live inspect with {0}</value>
+    <comment>{0} is the glimpse</comment>
+  </data>
+  <data name="LiveModeControl_PropertyValueFormat" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} is the property name; {1} is the property value</comment>
+  </data>
+  <data name="TestModeControl_DetectedFailureFormat" xml:space="preserve">
+    <value>Results for target {0}. {1} failures were detected.</value>
+    <comment>{0} is the glimpse; {1} is the failure count</comment>
+  </data>
+  <data name="TestModeControl_SaveExceptionFormat" xml:space="preserve">
+    <value>Couldn't save the file: {0} {1}</value>
+    <comment>{0} is the file name; {1} is the message explaining the error</comment>
+  </data>
+  <data name="TestModeControl_Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="tbxTimer_TextChangedFornmat" xml:space="preserve">
+    <value>Start test in {0} seconds</value>
+    <comment>{0} is the timer delay in seconds</comment>
+  </data>
+  <data name="ConfigPane_Exit_AccessText" xml:space="preserve">
+    <value>_x</value>
+  </data>
+  <data name="NavBar_Config_AccessText" xml:space="preserve">
+    <value>_c</value>
+  </data>
+  <data name="NavBar_IssueFilingConfig_AccessText" xml:space="preserve">
+    <value>_i</value>
+  </data>
+  <data name="LiveModeControl_Keyboard" xml:space="preserve">
+    <value>Use Tab or Shift+Tab to move between fields in the currently active pane. Use F6 or Shift+F6 to move between panes</value>
+  </data>
+  <data name="LiveModeControl_LearnMoreKeyboard" xml:space="preserve">
+    <value>Learn more about keyboard shortcuts</value>
+  </data>
+</root>

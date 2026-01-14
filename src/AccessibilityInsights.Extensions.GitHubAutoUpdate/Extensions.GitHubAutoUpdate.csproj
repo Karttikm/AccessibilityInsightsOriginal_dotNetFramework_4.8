@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>AccessibilityInsights.Extensions.GitHubAutoUpdate</AssemblyName>
+    <RootNamespace>AccessibilityInsights.Extensions.GitHubAutoUpdate</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\build\NetFrameworkRelease.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\AccessibilityInsights.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\AccessibilityInsights.SetupLibrary\SetupLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition" />
+  </ItemGroup>
+
+</Project>

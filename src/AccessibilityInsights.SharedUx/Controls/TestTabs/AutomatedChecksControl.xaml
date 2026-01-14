@@ -1,0 +1,81 @@
+<!-- Copyright (c) Microsoft. All rights reserved.
+     Licensed under the MIT license. See LICENSE file in the project root for full license information.-->
+<UserControl x:Class="AccessibilityInsights.SharedUx.Controls.TestTabs.AutomatedChecksControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fabric="clr-namespace:AccessibilityInsights.CommonUxComponents.Controls;assembly=AccessibilityInsights.CommonUxComponents"
+             xmlns:local="clr-namespace:AccessibilityInsights.SharedUx.Controls.CustomControls"
+             xmlns:Properties="clr-namespace:AccessibilityInsights.SharedUx.Properties"
+             mc:Ignorable="d"
+             AutomationProperties.Name="{x:Static Properties:Resources.AutomatedChecksControlAutomationName}"
+             IsVisibleChanged="UserControl_IsVisibleChanged">
+    <UserControl.Resources>
+        <ResourceDictionary Source="..\..\Resources\Styles.xaml"/>
+    </UserControl.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scrollview" SizeChanged="scrollview_SizeChanged">
+        <Grid Width="Auto" Margin="16,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="tbGlimpse" TextTrimming="CharacterEllipsis" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Style="{StaticResource tbHeaderDark}"/>
+                <Label Name="lblTitle" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="{x:Static Properties:Resources.lblTitleContent}" VerticalAlignment="Top" Style="{StaticResource lblHeader3}"/>
+                <Button Grid.Column="1"  Grid.Row="1" Margin="8,0" Style="{StaticResource BtnNoHoverColor}" 
+                        Foreground="{DynamicResource ResourceKey=ActiveBlueBrush}" HorizontalAlignment="Right"
+                        VerticalAlignment="Top" Name="btnTree" Click="btnTree_Click"
+                        AutomationProperties.Name="{Binding ElementName=tbViewResults,Path=Text}"
+                        AutomationProperties.AutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksUIATreeButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fabric:FabricIconControl GlyphName="DOM" FontSize="14" Foreground="{DynamicResource ResourceKey=ButtonLinkFGBrush}" Margin="0,0,4,0" ShowInControlView="False"/>
+                        <TextBlock Name="tbViewResults" Text="{x:Static Properties:Resources.tbViewResultsText}" Style="{StaticResource tbLink}" Focusable="False"/>
+                    </StackPanel>
+                </Button>
+                <Grid Visibility="Collapsed" Name="gdFailures" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <fabric:FabricIconControl VerticalAlignment="Center" HorizontalAlignment="Left"  Grid.Column="0"  GlyphName="AlertSolid" Foreground="{DynamicResource ResourceKey=HLbrushRed}" GlyphSize="Custom" FontSize="14"/>
+                    <TextBlock Name="tbSubTitle" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource tbRowStyle}"
+                               TextWrapping="Wrap" MinWidth="300" HorizontalAlignment="Left" Margin="0,2,-0.333,4"
+                               AutomationProperties.AutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksResultsTextBlock}">
+                        <Run Name="runFailures" Text="{x:Static Properties:Resources.runFailuresTextOneFailure}"/>
+                        <Run Text="{x:Static Properties:Resources.AutomatedChecksControl_tbSubtitleRun}"/>
+                    </TextBlock>
+                </Grid>
+            </Grid>
+            <Border Grid.Row="1" BorderBrush="{DynamicResource ResourceKey=TabBorderBrush}" BorderThickness="0,1,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ScrollViewer HorizontalScrollBarVisibility ="Auto" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                    <local:AutomatedChecksCustomListControl KeyboardNavigation.TabNavigation="Once" DataGridAccessibleName="{x:Static Properties:Resources.lblTitleContent}"
+                              x:Name="nonFrameworkListControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0"
+                              DataGridExpandAllAutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksExpandAllButton}"
+                              DataGridAutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksResultsListView}" Background="Transparent">
+                    </local:AutomatedChecksCustomListControl>
+                        <local:AutomatedChecksCustomListControl KeyboardNavigation.TabNavigation="Once" DataGridAccessibleName="{x:Static Properties:Resources.AutomatedChecksControlFrameworkIssuesLabel}"
+                              x:Name="frameworkListControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" SectionHeader="Potential framework issues"
+                              DataGridExpandAllAutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksFrameworkExpandAllButton}"
+                              DataGridAutomationId="{x:Static Properties:AutomationIDs.AutomatedChecksFrameworkResultsListView}" Background="Transparent">
+                    </local:AutomatedChecksCustomListControl>
+                </StackPanel>
+                </ScrollViewer>
+            </Border>
+            <Label Grid.Row="1" Name="lblCongrats" Visibility="Collapsed" Content="{x:Static Properties:Resources.lblCongratsContent}" HorizontalAlignment="Center"  Width="Auto" Style="{StaticResource lblHeader2}" Padding="0,32,0,0" />
+            <TextBlock Grid.Row="1" Name="lblNoFail" Visibility="Collapsed" Text="{x:Static Properties:Resources.lblNoFailText}"  Style="{StaticResource tbHeaderDark}" TextWrapping="Wrap" Width="214" HorizontalAlignment="Center" TextAlignment="Center" Padding="0,49,0,0" />
+        </Grid>
+    </ScrollViewer>
+</UserControl>
