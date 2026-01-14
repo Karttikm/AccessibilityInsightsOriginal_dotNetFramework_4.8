@@ -1,0 +1,195 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Axe.Windows.Core.Bases;
+using Axe.Windows.Core.Enums;
+using Axe.Windows.Core.Misc;
+using Axe.Windows.Desktop.Resources;
+using Axe.Windows.Telemetry;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using UIAutomationClient;
+
+namespace Axe.Windows.Desktop.UIAutomation.TreeWalkers
+{
+    /// <summary>
+    /// class DesktopElementAncestry
+    /// Get the ancestry hierarchy
+    /// </summary>
+    public class DesktopElementAncestry
+    {
+        /// <summary>
+        /// Oldest in Ancestry
+        /// </summary>
+        public A11yElement First { get; }
+
+        /// <summary>
+        /// Last in Ancestry
+        /// </summary>
+        public A11yElement Last { get; }
+
+        public IList<A11yElement> Items { get; }
+
+        private readonly IUIAutomationTreeWalker _treeWalker;
+
+        public TreeViewMode TreeWalkerMode { get; }
+
+        /// <summary>
+        /// Parent elements' SetMembers value
+        /// </summary>
+        private bool SetMembers { get; }
+
+        /// <summary>
+        /// Id for next element
+        /// it will be used in Tree Walker.
+        /// </summary>
+        public int NextId { get; }
+
+        /// <summary>
+        /// Constructor for DesktopElementAncestry, currently used only by AIWin
+        /// Get Ancestry Tree elements up to Desktop (ideally)
+        /// </summary>
+        public DesktopElementAncestry(TreeViewMode mode, A11yElement e, bool setMembers)
+            : this(mode, e, setMembers, DesktopDataContext.DefaultContext)
+        {
+        }
+
+        internal DesktopElementAncestry(TreeViewMode mode, A11yElement e, bool setMembers, DesktopDataContext dataContext)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            _treeWalker = dataContext.A11yAutomation.GetTreeWalker(mode);
+            TreeWalkerMode = mode;
+            Items = new List<A11yElement>();
+            SetMembers = setMembers;
+            SetParent(e, -1, dataContext);
+
+            if (Items.Count != 0)
+            {
+                First = Items.Last();
+                Last = Items.First();
+                if (Last.IsRootElement() == false)
+                {
+                    Last.Children.Clear();
+                    NextId = PopulateSiblingTreeNodes(Last, e, dataContext);
+                }
+                else
+                {
+                    NextId = 1;
+                }
+            }
+
+            Marshal.ReleaseComObject(_treeWalker);
+        }
+
+        /// <summary>
+        /// Set Parent to build ancestry tree
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="uniqueId"></param>
+        private void SetParent(A11yElement e, int uniqueId, DesktopDataContext dataContext)
+        {
+            if (e == null || e.PlatformObject == null || e.IsRootElement()) return;
+
+            try
+            {
+                var puia = _treeWalker.GetParentElement((IUIAutomationElement)e.PlatformObject);
+                if (puia == null) return;
+
+#pragma warning disable CA2000 // Call IDisposable.Dispose()
+                var parent = new DesktopElement(puia, true, SetMembers);
+                parent.PopulateMinimumPropertiesForSelection(dataContext);
+
+                // we need to avoid infinite loop of self reference as parent.
+                // it is a probably a bug in UIA or the target app.
+                if (e.IsSameUIElement(parent) == false)
+                {
+                    parent.IsAncestorOfSelected = true;
+                    parent.Children.Add(e);
+                    e.Parent = parent;
+                    Items.Add(parent);
+                    parent.UniqueId = uniqueId;
+
+                    SetParent(parent, uniqueId - 1, dataContext);
+                }
+#pragma warning restore CA2000
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception ex)
+            {
+                ex.ReportException();
+                // ignore to show the best efforts.
+                System.Diagnostics.Trace.WriteLine(ex);
+            }
+#pragma warning restore CA1031 // Do not catch general exception types
+        }
+
+        /// <summary>
+        /// Populate siblings
+        /// </summary>
+        /// <param name="parentNode"></param>
+        /// <param name="poiNode"></param>
+        /// <param name="startId"></param>
+        private int PopulateSiblingTreeNodes(A11yElement parentNode, A11yElement poiNode, DesktopDataContext dataContext)
+        {
+            int childId = 1;
+
+            IUIAutomationTreeWalker walker = _treeWalker;
+            if ((IUIAutomationElement)parentNode.PlatformObject != null)
+            {
+                IUIAutomationElement child;
+                try
+                {
+                    child = walker.GetFirstChildElement((IUIAutomationElement)parentNode.PlatformObject);
+                }
+#pragma warning disable CA1031 // Do not catch general exception types
+                catch (Exception ex)
+                {
+                    ex.ReportException();
+                    child = null;
+                    System.Diagnostics.Trace.WriteLine(ErrorMessages.TreeWalkerException.WithParameters(ex));
+                }
+#pragma warning restore CA1031 // Do not catch general exception types
+
+                while (child != null)
+                {
+#pragma warning disable CA2000 // Use recommended dispose patterns
+                    var childNode = new DesktopElement(child, true, false);
+#pragma warning restore CA2000 // Use recommended dispose patterns
+                    childNode.PopulateMinimumPropertiesForSelection(dataContext);
+
+                    if (childNode.IsSameUIElement(poiNode) == false)
+                    {
+                        childNode.UniqueId = childId++;
+                        childNode.Parent = parentNode;
+                        childNode.TreeWalkerMode = TreeWalkerMode;
+                        Items.Add(childNode);
+                    }
+                    else
+                    {
+                        childNode = poiNode as DesktopElement;
+                    }
+
+                    parentNode.Children.Add(childNode);
+
+                    try
+                    {
+                        child = walker.GetNextSiblingElement(child);
+                    }
+#pragma warning disable CA1031 // Do not catch general exception types
+                    catch (Exception ex)
+                    {
+                        ex.ReportException();
+                        child = null;
+                        System.Diagnostics.Trace.WriteLine(ErrorMessages.TreeWalkerException.WithParameters(ex));
+                    }
+#pragma warning restore CA1031 // Do not catch general exception types
+                }
+            }
+
+            return childId;
+        }
+    }
+}

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Axe.Windows</id>
+    <version>$VersionString$</version>
+    <title>axe-windows</title>
+    <summary>Automated accessibility analysis for Windows applications</summary>
+    <description>The package provides the assemblies necessary to automate accessibility testing for Windows applications using the included axe-windows rule set.</description>
+    <projectUrl>https://github.com/Microsoft/axe-windows</projectUrl>
+    <authors>Microsoft and collaborators</authors>
+    <owners>Microsoft</owners>
+    <license type="expression">MIT</license>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <language>en-US</language>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>axe windows accessibility automation</tags>
+    <dependencies>
+      <group targetFramework="netstandard2.0">
+        <dependency id="Newtonsoft.Json" version="13.0.3" />
+        <dependency id="Microsoft.Win32.Registry" version="5.0.0" />
+        <dependency id="System.Drawing.Common" version="8.0.10" />
+        <dependency id="System.IO.Packaging" version="8.0.1" />
+      </group>
+    </dependencies>
+    <releaseNotes>https://github.com/microsoft/axe-windows/releases</releaseNotes>
+  </metadata>
+  <files>
+    <file src="bin\$configuration$\**\axe.windows.*.dll" target="lib\netstandard20" />
+    <file src="bin\$configuration$\Axe.Windows.Automation.xml" target="lib\netstandard20" />
+  </files> 
+</package>

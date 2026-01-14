@@ -1,0 +1,710 @@
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Axe.Windows.Core.Attributes;
+using Axe.Windows.Core.Bases;
+using Axe.Windows.Core.Enums;
+using Axe.Windows.Core.Resources;
+using Axe.Windows.Core.Results;
+using Axe.Windows.Core.Types;
+using Axe.Windows.Telemetry;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+
+using static System.FormattableString;
+
+namespace Axe.Windows.Core.Misc
+{
+    /// <summary>
+    /// Extension method class
+    /// </summary>
+    public static class ExtensionMethods
+    {
+        /// <summary>
+        /// UIA class name of the root (desktop) element
+        /// </summary>
+        const string DesktopElementClassName = "#32769";
+
+        /// <summary>
+        /// WCOS runtime ID
+        /// </summary>
+        const string WCOSDesktopElementRuntimeId = "[0,0]";
+
+        /// <summary>
+        /// Get A11yElementData object out of A11yElement
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static A11yElementData GetA11yElementData(this A11yElement e)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            return new A11yElementData() { Patterns = e.Patterns, Properties = e.Properties };
+        }
+
+        /// <summary>
+        /// Check whether element is control or Content
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsControlOrContent(this A11yElement e)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            return e.IsContentElement || e.IsControlElement;
+        }
+
+        /// <summary>
+        /// Obtains the ClassName of the element
+        /// </summary>
+        /// <param name="e">A11yElement</param>
+        /// <returns>UIA_ClassNamePropertyId</returns>
+        public static string GetClassName(this A11yElement e)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e.Properties == null) return null;
+            if (!e.Properties.ContainsKey(PropertyType.UIA_ClassNamePropertyId)) return null;
+
+            return e.Properties[PropertyType.UIA_ClassNamePropertyId].TextValue;
+        }
+
+        /// <summary>
+        /// Check whether Pattern is actionable or not based on PatternMethod
+        /// </summary>
+        /// <param name="ptn"></param>
+        /// <returns></returns>
+        public static bool IsUIActionablePatternByPatternMethodType(this A11yPattern ptn)
+        {
+            if (ptn == null) throw new ArgumentNullException(nameof(ptn));
+
+            return (from m in ptn.GetType().GetMethods()
+                    let a = m.GetCustomAttribute(typeof(PatternMethodAttribute))
+                    where a != null && (bool)a.GetType().GetProperty("IsUIAction").GetValue(a) == true
+                    select a).Any();
+        }
+
+        /// <summary>
+        /// convert int array to string in Hex value.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static string ConvertIntArrayToString(int[] array)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append('[');
+
+            if (array != null && array.Length > 0)
+            {
+                sb.Append(Invariant($"{array.GetValue(0):X}"));
+                for (int i = 1; i < array.Length; i++)
+                {
+                    sb.Append(Invariant($",{array.GetValue(i):X}"));
+                }
+            }
+
+            sb.Append(']');
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// To handle deserialized value from json file.
+        /// Need to figure out a way to remove this duplicated code.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static string ConvertIntArrayToString(Newtonsoft.Json.Linq.JArray array)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append('[');
+
+            if (array != null && array.Count > 0)
+            {
+                sb.Append(Invariant($"{array[0]:X}"));
+                for (int i = 1; i < array.Count; i++)
+                {
+                    sb.Append(Invariant($",{array[i]:X}"));
+                }
+            }
+
+            sb.Append(']');
+
+            return sb.ToString();
+        }
+
+        public static string ConvertDoubleArrayToString(double[] array)
+        {
+            if (array != null && array.Length != 0)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append('[');
+
+                if (array.Length > 0)
+                {
+                    sb.Append(Invariant($"{array.GetValue(0)}"));
+                    for (int i = 1; i < array.Length; i++)
+                    {
+                        sb.Append(Invariant($",{array.GetValue(i)}"));
+                    }
+                }
+
+                sb.Append(']');
+
+                return sb.ToString();
+            }
+            return null;
+        }
+
+        public static string ConvertDoubleArrayToString(this Array array)
+        {
+            return ConvertDoubleArrayToString((double[])array);
+        }
+
+        public static string ConvertInt32ArrayToString(int[] array)
+        {
+            if (array != null && array.Length != 0)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append('[');
+
+                if (array.Length > 0)
+                {
+                    sb.Append(Invariant($"{array.GetValue(0)}"));
+                    for (int i = 1; i < array.Length; i++)
+                    {
+                        sb.Append(Invariant($",{array.GetValue(i)}"));
+                    }
+                }
+
+                sb.Append(']');
+
+                return sb.ToString();
+            }
+
+            return null;
+        }
+
+        public static string ConvertInt32ArrayToString(this Array array)
+        {
+            return ConvertInt32ArrayToString((int[])array);
+        }
+
+        /// <summary>
+        /// Check whether UIElement is same or not.
+        /// </summary>
+        /// <param name="element1"></param>
+        /// <param name="element2"></param>
+        /// <returns></returns>
+        public static bool IsSameUIElement(this A11yElement element1, A11yElement element2)
+        {
+            if (element1 != null && element2 != null)
+            {
+                return element1.IsSameUIElement(element2.RuntimeId, element2.BoundingRectangle, element2.ControlTypeId, element2.Name);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check whether UIElement is same or not
+        /// based on runtime Id, name, controltype, and BoundingRectangle
+        /// </summary>
+        /// <param name="element1"></param>
+        /// <param name="runtimeId"></param>
+        /// <param name="rect"></param>
+        /// <param name="controltype">Control type Id</param>
+        /// <param name="name">Name of control</param>
+        /// <returns></returns>
+        public static bool IsSameUIElement(this A11yElement element1, string runtimeId, Rectangle? rect, int controltype, string name)
+        {
+            if (element1 != null)
+            {
+                if (string.IsNullOrEmpty(element1.RuntimeId) == false
+                    || string.IsNullOrEmpty(runtimeId) == false)
+                {
+                    return element1.RuntimeId == runtimeId;
+                }
+                else if (element1.Name == name)
+                {
+                    if (element1.ControlTypeId == controltype)
+                    {
+                        // if control type is same check, bounding rectangle for sure.
+                        if (!element1.BoundingRectangle.IsEmpty
+                            && rect != null
+                            && !rect.Value.IsEmpty)
+                        {
+                            var r = element1.BoundingRectangle;
+                            var l = rect.Value;
+                            return l.Left == r.Left && l.Top == r.Top && l.Right == l.Right && l.Bottom == r.Bottom;
+                        }
+                        else
+                        {
+                            // if both has no bounding rectangle, consider them as same element.
+                            return element1.BoundingRectangle.IsEmpty
+                                && (rect == null
+                                || rect.Value.IsEmpty);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the POI element with test results from this element and descendants
+        /// POI element Unique ID should be 0.
+        /// </summary>
+        /// <param name="element">The root of the element tree</param>
+        /// <returns>The POI if it exists</returns>
+        /// <exception cref="ArgumentException"> is thrown if no POI can be located in the element tree</exception>
+        public static A11yElement FindPOIElementFromLoadedData(this A11yElement element)
+        {
+            if (element.TryRecursivelyFindPOI(out A11yElement poi))
+            {
+                return poi;
+            }
+
+            throw new ArgumentException(ErrorMessages.UnableToLocateTargetElementInFile);
+        }
+
+        private static bool TryRecursivelyFindPOI(this A11yElement element, out A11yElement poi)
+        {
+            if (element != null)
+            {
+                if (element.UniqueId == 0)
+                {
+                    poi = element;
+                    return true;
+                }
+
+                if (element.Children != null)
+                {
+                    foreach (A11yElement child in element.Children)
+                    {
+                        if (child.TryRecursivelyFindPOI(out poi))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            poi = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns an IList of A11yElements along the path from the origin to this element
+        /// </summary>
+        /// <param name="element">Element to find the path to</param>
+        /// <param name="descending">Indicates whether the path goes from top to bottom</param>
+        /// <returns></returns>
+        public static IList<A11yElement> GetPathFromOriginAncestor(this A11yElement element, bool descending = true)
+        {
+            List<A11yElement> res = new List<A11yElement>() { element };
+            var e = element;
+            while (e != null && e.Parent != null)
+            {
+                e = e.Parent;
+                res.Add(e);
+            }
+            if (descending)
+            {
+                res.Reverse();
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the Top level Ancestor from Ancestry.
+        ///     If "controlType" is passed in, then the return type is the
+        ///     first ancestor of the specified control type. Usually used to find app window
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static A11yElement GetOriginAncestor(this A11yElement element, int? controlType = null)
+        {
+            var e = element;
+            while (e != null && e.Parent != null && (controlType == null || controlType != e.ControlTypeId))
+            {
+                e = e.Parent;
+            }
+
+            return e;
+        }
+
+        public static string GetSafeSenderStringValue(GetStringValue getString)
+        {
+            if (getString == null) throw new ArgumentNullException(nameof(getString));
+
+            string txt;
+            try
+            {
+                txt = getString();
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception e)
+            {
+                e.ReportException();
+                txt = "";
+            }
+#pragma warning restore CA1031 // Do not catch general exception types
+
+            return txt;
+        }
+
+        /// <summary>
+        /// Convert Element Value to formated string
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static string ConvertIntArrayToString(this A11yProperty p)
+        {
+            if (p == null) throw new ArgumentNullException(nameof(p));
+
+            return p.Value != null ? ConvertIntArrayToString(p.Value) : null;
+        }
+
+        /// <summary>
+        /// Gets the counts of scan result statuses from given parameter
+        /// </summary>
+        /// <param name="scanStatuses"></param>
+        /// <returns>counts where result-array[scan-status] is the count of ScanStatus
+        ///          elements with scan-status
+        /// </returns>
+        public static int[] GetStatusCounts(this IEnumerable<ScanStatus> scanStatuses)
+        {
+            int numStatusTypes = Enum.GetNames(typeof(ScanStatus)).Length;
+            int[] results = new int[numStatusTypes];
+
+            // a foreach loop on a null variable does not throw an exception
+            // Since this check is being added without knowing the author's intent,
+            // the logic of simply returning empty results has been maintained.
+            if (scanStatuses == null) return results;
+
+            foreach (var status in scanStatuses)
+            {
+                results[(int)status]++;
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Get the aggregated test status.
+        /// </summary>
+        /// <param name="tss"></param>
+        /// <returns></returns>
+        public static ScanStatus GetAggregatedScanStatus(this IEnumerable<ScanStatus> tss)
+        {
+            if (tss.Any())
+            {
+                if (HasTestResults(tss, ScanStatus.ScanNotSupported))
+                {
+                    return ScanStatus.ScanNotSupported;
+                }
+                else if (HasTestResults(tss, ScanStatus.Fail))
+                {
+                    return ScanStatus.Fail;
+                }
+                else if (HasTestResults(tss, ScanStatus.Uncertain))
+                {
+                    return ScanStatus.Uncertain;
+                }
+
+                return ScanStatus.Pass;
+            }
+
+            return ScanStatus.NoResult;
+        }
+
+        private static bool HasTestResults(IEnumerable<ScanStatus> tss, ScanStatus ets)
+        {
+            return tss.Contains(ets);
+        }
+
+        /// <summary>
+        /// Check whether a indicated pattern ID exists in pattern list
+        /// </summary>
+        /// <param name="ps"></param>
+        /// <returns></returns>
+        public static bool HasPatternBy(this IList<A11yPattern> ps, int id)
+        {
+            if (ps == null || ps.Count == 0) return false;
+
+            return (from p in ps
+                    where p.Id == id
+                    select p).Any();
+        }
+
+        /// <summary>
+        /// Check whether a indicated control type ID exists in child element list.
+        /// </summary>
+        /// <param name="cs"></param>
+        /// <returns></returns>
+        public static bool HasChildBy(this IList<A11yElement> cs, int id)
+        {
+            return (from c in cs
+                    let cid = c.Properties.ById(PropertyType.UIA_ControlTypePropertyId).Value
+                    where c.ControlTypeId == id
+                    select c).Any();
+        }
+
+        /// <summary>
+        /// find matching Pattern by Id
+        /// </summary>
+        /// <param name="ps"></param>
+        /// <returns></returns>
+        public static A11yPattern ById(this IList<A11yPattern> ps, int id)
+        {
+            if (ps == null || ps.Count == 0) return null;
+
+            return (from p in ps
+                    where p.Id == id
+                    select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// find matching Property by Id
+        /// </summary>
+        /// <param name="ps"></param>
+        /// <returns></returns>
+        public static A11yProperty ById(this Dictionary<int, A11yProperty> ps, int id)
+        {
+            if (ps != null && ps.TryGetValue(id, out A11yProperty property))
+            {
+                return property;
+            }
+
+            return null;
+        }
+
+        public static IA11yPattern ById(this IEnumerable<IA11yPattern> patterns, int id)
+        {
+            if (patterns == null) return null;
+
+            return patterns.FirstOrDefault(p => p.Id == id);
+        }
+
+        /// <summary>
+        /// find matching PatternProperty by Name
+        /// </summary>
+        /// <param name="ps"></param>
+        /// <returns></returns>
+        public static A11yPatternProperty ByName(this IList<A11yPatternProperty> ps, string name)
+        {
+            return (from p in ps
+                    where p.Name == name
+                    select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Count the number of element with the expected control type
+        /// </summary>
+        /// <param name="es"></param>
+        /// <returns></returns>
+        public static int CountMatchedByControlType(this IList<A11yElement> es, int id)
+        {
+            return (from e in es
+                    where e.ControlTypeId == id
+                    select e).Count();
+        }
+
+        /// <summary>
+        /// Get all children with the specified control type Id
+        /// </summary>
+        /// <param name="es"></param>
+        /// <returns></returns>
+        public static IList<A11yElement> ByControlType(this IList<A11yElement> es, int id)
+        {
+            return (from e in es
+                    where e.ControlTypeId == id
+                    select e).ToList();
+        }
+
+        /// <summary>
+        /// Count the number of element which are not matched in the given list
+        /// </summary>
+        /// <param name="es"></param>
+        /// <returns></returns>
+        public static int CountUnMatchedByControlTypes(this IList<A11yElement> es, int[] ids)
+        {
+            return (from e in es
+                    where ids.Contains(e.ControlTypeId) == false
+                    select e).Count();
+        }
+
+        /// <summary>
+        /// Convert Element Property value to Rectangle
+        /// </summary>
+        /// <param name="ep"></param>
+        /// <returns></returns>
+        public static Rectangle ToRectangle(this A11yProperty property)
+        {
+            if (property == null) return Rectangle.Empty;
+
+            switch (property.Value)
+            {
+                case double[] rectangle:
+                    {
+                        if (rectangle.Length != 4)
+                            return Rectangle.Empty;
+
+                        return new Rectangle(
+                x: (int)rectangle[0],
+                y: (int)rectangle[1],
+                width: rectangle[2] > 0 ? (int)rectangle[2] : 0,
+                height: rectangle[3] > 0 ? (int)rectangle[3] : 0);
+                    }
+                case Newtonsoft.Json.Linq.JArray jArray:
+                    {
+                        if (jArray.Count != 4)
+                            return Rectangle.Empty;
+
+                        foreach (var token in jArray)
+                        {
+                            if (token.Type != Newtonsoft.Json.Linq.JTokenType.Float)
+                                return Rectangle.Empty;
+                        }
+
+                        int width = jArray[2].ToObject<int>();
+                        int height = jArray[3].ToObject<int>();
+
+                        return new Rectangle(
+                            x: jArray[0].ToObject<int>(),
+                            y: jArray[1].ToObject<int>(),
+                            width: width > 0 ? width : 0,
+                            height: height > 0 ? height : 0);
+                    }
+            } // switch
+
+            return Rectangle.Empty;
+        }
+
+        public static T[] ToArray<T>(this Newtonsoft.Json.Linq.JArray j)
+        {
+            if (j == null) return null;
+
+            var retVal = new T[j.Count];
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Convert Element Property value to Size
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns>A Size object</returns>
+        public static Size ToSize(this A11yProperty property)
+        {
+            if (property?.Value is null) return Size.Empty;
+            if (property.Id != PropertyType.Axe_LogicalSizePseudoPropertyId) throw new ArgumentException("ToSize is not supported for this property type", nameof(property));
+
+            return new Size(property.Value[0], property.Value[1]);
+        }
+
+        public static string ToLeftTopRightBottomString(this Rectangle r)
+        {
+            return string.Format(CultureInfo.CurrentCulture, DisplayStrings.LeftTopRightBottomFormat, r.Left, r.Top, r.Right, r.Bottom);
+        }
+
+        /// <summary>
+        /// Check whether the UI element is off-screen or not based on IsOffScreen property.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsOffScreen(this A11yElement e)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            var p = e.Properties.ById(PropertyType.UIA_IsOffscreenPropertyId);
+            return p != null && p.Value == true;
+        }
+
+        /// <summary>
+        /// Check whether this element is Desktop Element or not.
+        /// it is based on Runtime ID
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsRootElement(this IA11yElement e)
+        {
+            // On Windows, check for the desktop (root) element by class name.
+            // On WCOS, check for the desktop by process and runtime IDs.
+            return e != null && (
+                e.ClassName == DesktopElementClassName
+                || (e.ProcessId == 0 && e.RuntimeId == WCOSDesktopElementRuntimeId)
+            );
+        }
+
+        /// <summary>
+        /// Get the Framework value.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static string GetUIFramework(this IA11yElement e)
+        {
+            if (e == null) return null;
+
+            // Only query Framework property once to simplify unit test setup 
+            string framework = e.Framework;
+
+            return (string.IsNullOrEmpty(framework))
+                ? GetUIFramework(e.Parent)
+                : framework;
+        }
+
+        /// <summary>
+        /// Returns the right tree structure rule for the given viewmode
+        /// Throws InvalidEnumArgumentException if no rule id property exists
+        /// </summary>
+        /// <param name="viewMode">tree walker mode (content/control/raw)</param>
+        /// <returns>associated rule for typical tree structure</returns>
+        public static RuleId GetTreeStructureRule(TreeViewMode viewMode)
+        {
+            switch (viewMode)
+            {
+                case TreeViewMode.Content:
+                    return RuleId.TypicalTreeStructureContent;
+                case TreeViewMode.Control:
+                    return RuleId.TypicalTreeStructureControl;
+                case TreeViewMode.Raw:
+                    return RuleId.TypicalTreeStructureRaw;
+                default:
+                    throw new InvalidEnumArgumentException(ErrorMessages.NoRuleIdExists.WithParameters(viewMode));
+            }
+        }
+
+        public static T GetPropertyOrDefault<T>(this A11yElement e, int propertyId)
+        {
+            if (e == null) return default(T);
+
+            return e.TryGetPropertyValue(propertyId, out T value)
+                ? value : default(T);
+        }
+
+        public static bool HasAttribute<T>(this FieldInfo field) where T : Attribute
+        {
+            if (field == null) throw new ArgumentNullException(nameof(field));
+
+            var a = field.GetCustomAttribute(typeof(T));
+
+            return a != null;
+        }
+
+        public static string WithParameters(this string formatString, params object[] args)
+        {
+            return string.Format(CultureInfo.InvariantCulture, formatString, args);
+        }
+    }
+}

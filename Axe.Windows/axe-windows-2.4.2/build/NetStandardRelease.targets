@@ -1,0 +1,54 @@
+﻿<!-- Copyright (c) Microsoft. All rights reserved.
+     Licensed under the MIT license. See LICENSE file in the project root for full license information.-->
+<Project>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>RS0100;RS0016;CA1704</NoWarn>
+    <!-- used by Microsoft.CodeAnalysis.NetAnalyzers -->
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <Import Project="..\src\props\version.props" />
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildProjectDirectory)\..\bld\AxeWindowsVersionInfo.cs" Link="AxeWindowsVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildProjectDirectory)\..\Attributes\AttributesInfo.cs" Link="AttributesInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <Choose>
+    <When Condition=" '$(DropSignedFile)' == '' ">
+      <ItemGroup>
+        <DropSignedFile Include="$(TargetPath)" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <Import Project="NetStandardAll.targets" />
+  <Import Project="settings.targets" />
+
+</Project>

@@ -1,0 +1,47 @@
+﻿<!-- Copyright (c) Microsoft. All rights reserved.
+     Licensed under the MIT license. See LICENSE file in the project root for full license information.-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+  
+  <!--
+  Settings file which is directly included imported all of the shipping code projects in the repo.
+  -->
+
+  <Import Project="delaysign.targets" />
+
+  <Choose>
+    <When Condition=" '$(SignAppForRelease)'=='true' AND '$(Configuration)' == 'Release' ">
+      <ItemGroup>
+        <FilesToSign Include="@(DropMsftSignedFile)">
+          <Authenticode>Microsoft400</Authenticode>
+        </FilesToSign>
+      </ItemGroup>
+      <ItemGroup>
+        <FilesToSign Include="@(DropSignedFile)">
+          <Authenticode>Microsoft400</Authenticode>
+          <StrongName>StrongName</StrongName>
+        </FilesToSign>
+      </ItemGroup>
+      <ItemGroup>
+        <FilesToSign Include="@(Drop3PartySignedFile)">
+          <Authenticode>3PartySHA2</Authenticode>
+        </FilesToSign>
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
+      <InProject>false</InProject>
+    </SignFilesDependsOn>
+  </ItemGroup>
+
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true'">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft400</Authenticode>
+        <StrongName>StrongName</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
+
+</Project>
