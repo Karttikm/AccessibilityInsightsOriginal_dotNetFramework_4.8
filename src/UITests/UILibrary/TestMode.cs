@@ -15,7 +15,7 @@ namespace UITests.UILibrary
     {
         public AutomatedChecks AutomatedChecks { get; }
         public ResultsInUIATree ResultsInUIATree { get; }
-        public TestMode(WindowsDriver<WindowsElement> session)
+        public TestMode(WindowsDriver session)
         {
             AutomatedChecks = new AutomatedChecks(session);
             ResultsInUIATree = new ResultsInUIATree(session);
@@ -24,63 +24,63 @@ namespace UITests.UILibrary
 
     public class AutomatedChecks
     {
-        readonly WindowsDriver<WindowsElement> Session;
-        public AutomatedChecks(WindowsDriver<WindowsElement> session)
+        readonly WindowsDriver Session;
+        public AutomatedChecks(WindowsDriver session)
         {
             Session = session;
         }
 
-        public void ViewInUIATree() => Session.FindElementByAccessibilityId(AutomationIDs.AutomatedChecksUIATreeButton).Click();
+        public void ViewInUIATree() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.AutomatedChecksUIATreeButton)).Click();
 
         public void GoToAutomatedChecksElementDetails(int element)
         {
-            var resultsGrid = Session.FindElementByAccessibilityId(AutomationIDs.AutomatedChecksResultsListView);
-            var results = resultsGrid.FindElementsByClassName("ListViewItem");
+            var resultsGrid = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.AutomatedChecksResultsListView));
+            var results = resultsGrid.FindElements(MobileBy.ClassName("ListViewItem"));
 
-            results[element].FindElementByClassName("Button").Click();
+            results[element].FindElement(MobileBy.ClassName("Button")).Click();
         }
 
         public void ValidateAutomatedChecks(int? nonFrameworkErrorCount, int? frameworkErrorCount)
         {
             ValidateResultCountForSet(AutomationIDs.AutomatedChecksResultsListView, AutomationIDs.AutomatedChecksExpandAllButton, nonFrameworkErrorCount);
             ValidateResultCountForSet(AutomationIDs.AutomatedChecksFrameworkResultsListView, AutomationIDs.AutomatedChecksFrameworkExpandAllButton, frameworkErrorCount);
-            var resultsText = Session.FindElementByAccessibilityId(AutomationIDs.AutomatedChecksResultsTextBlock).Text;
+            var resultsText = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.AutomatedChecksResultsTextBlock)).Text;
             var resultTextCount = int.Parse(resultsText.Split()[0]);
 
             int expectedTotalResultCount = (nonFrameworkErrorCount ?? 0) + (frameworkErrorCount ?? 0);
-            Assert.AreEqual(resultTextCount, expectedTotalResultCount);
+            Assert.AreEqual(expectedTotalResultCount, resultTextCount);
         }
 
         private void ValidateResultCountForSet(string selector, string expandAllSelector, int? expectedErrorCount)
         {
             if (expectedErrorCount.HasValue)
             {
-                var resultsGrid = Session.FindElementByAccessibilityId(selector);
-                Session.FindElementByAccessibilityId(expandAllSelector).Click();
-                var results = resultsGrid.FindElementsByClassName("ListViewItem");
-                Assert.AreEqual(expectedErrorCount, results.Count);
+                var resultsGrid = Session.FindElement(MobileBy.AccessibilityId(selector));
+                Session.FindElement(MobileBy.AccessibilityId(expandAllSelector)).Click();
+                var results = resultsGrid.FindElements(MobileBy.ClassName("ListViewItem"));
+                Assert.HasCount((int)expectedErrorCount, results);
             }
             else
             {
-                Assert.ThrowsException<WebDriverException>(() => Session.FindElementByAccessibilityId(selector));
-                Assert.ThrowsException<WebDriverException>(() => Session.FindElementByAccessibilityId(expandAllSelector));
+                Assert.Throws<WebDriverException>(() => Session.FindElement(MobileBy.AccessibilityId(selector)));
+                Assert.Throws<WebDriverException>(() => Session.FindElement(MobileBy.AccessibilityId(expandAllSelector)));
             }
         }
     }
 
     public class ResultsInUIATree
     {
-        readonly WindowsDriver<WindowsElement> Session;
-        public ResultsInUIATree(WindowsDriver<WindowsElement> session)
+        readonly WindowsDriver Session;
+        public ResultsInUIATree(WindowsDriver session)
         {
             Session = session;
         }
-        public void BackToAutomatedChecks() => Session.FindElementByAccessibilityId(AutomationIDs.MainWinBreadCrumbTwoButton).Click();
+        public void BackToAutomatedChecks() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.MainWinBreadCrumbTwoButton)).Click();
 
         public void SwitchToResultsTab()
         {
-            var tree = Session.FindElementByAccessibilityId(AutomationIDs.HierarchyControlUIATreeView);
-            var nodes = tree.FindElementsByClassName("TreeViewItem");
+            var tree = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.HierarchyControlUIATreeView));
+            var nodes = tree.FindElements(MobileBy.ClassName("TreeViewItem"));
             var patterns = GetPatternsNodes(AutomationIDs.SnapshotModeControl, nodes);
 
             patterns.Last().SendKeys(Keys.Control + Keys.Tab);
@@ -88,44 +88,44 @@ namespace UITests.UILibrary
 
         public void SwitchToDetailsTab()
         {
-            var resultsList = Session.FindElementByAccessibilityId(AutomationIDs.ScannerResultsListView);
-            var resultsAll = resultsList.FindElementsByClassName("ListViewItem");
+            var resultsList = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.ScannerResultsListView));
+            var resultsAll = resultsList.FindElements(MobileBy.ClassName("ListViewItem"));
 
             resultsAll.First().SendKeys(Keys.Control + Keys.Tab);
         }
 
         public void SelectElementInTree(int element)
         {
-            var tree = Session.FindElementByAccessibilityId(AutomationIDs.HierarchyControlUIATreeView);
-            var nodes = tree.FindElementsByClassName("TreeViewItem");
+            var tree = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.HierarchyControlUIATreeView));
+            var nodes = tree.FindElements(MobileBy.ClassName("TreeViewItem"));
             nodes[element].SendKeys(Keys.Enter);
         }
 
         public void ValidateDetails(string firstPattern, string firstProperty, int patternCount, int propCount)
         {
-            var snapshotModeControl = Session.FindElementByAccessibilityId(AutomationIDs.SnapshotModeControl);
-            var props = snapshotModeControl.FindElementsByClassName("ListViewItem");
+            var snapshotModeControl = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.SnapshotModeControl));
+            var props = snapshotModeControl.FindElements(MobileBy.ClassName("ListViewItem"));
             props[0].Click();
-            var tree = snapshotModeControl.FindElementByAccessibilityId(AutomationIDs.HierarchyControlUIATreeView);
-            var nodes = tree.FindElementsByClassName("TreeViewItem");
+            var tree = snapshotModeControl.FindElement(MobileBy.AccessibilityId(AutomationIDs.HierarchyControlUIATreeView));
+            var nodes = tree.FindElements(MobileBy.ClassName("TreeViewItem"));
             var patterns = GetPatternsNodes(AutomationIDs.SnapshotModeControl, nodes);
 
             Assert.AreEqual(firstPattern, patterns.First().Text);
             Assert.AreEqual(firstProperty, props[0].Text);
             Assert.AreEqual(patternCount, patterns.Count());
-            Assert.AreEqual(propCount, props.Count);
+            Assert.HasCount(propCount, props);
         }
 
         public void ValidateTree(string firstNodeText, int nodeCount)
         {
-            var tree = Session.FindElementByAccessibilityId(AutomationIDs.HierarchyControlUIATreeView);
-            var nodes = tree.FindElementsByClassName("TreeViewItem");
+            var tree = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.HierarchyControlUIATreeView));
+            var nodes = tree.FindElements(MobileBy.ClassName("TreeViewItem"));
 
-            Assert.AreEqual(nodeCount, nodes.Count);
+            Assert.HasCount(nodeCount, nodes);
 
             // We're seeing the Text property here return different values on different versions of .NET framework.
             // As such, we only check for Contains (not Equals) here to make the test more flexible.
-            Assert.IsTrue(nodes.First().Text.Contains(firstNodeText));
+            Assert.Contains(firstNodeText, nodes.First().Text);
         }
 
         public void ValidateResults(int nonExpandedNonFrameworkResultsCount, int expandedNonFrameworkResultsCount,
@@ -136,8 +136,8 @@ namespace UITests.UILibrary
 
             if (expandedNonFrameworkResultsCount > 0 || expandedFrameworkResultsCount > 0)
             {
-                Session.FindElementByAccessibilityId(AutomationIDs.ScannerResultsShowAllButton).Click();
-                var fixFollowTb = Session.FindElementByAccessibilityId(AutomationIDs.ScannerResultsFixFollowingTextBox);
+                Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.ScannerResultsShowAllButton)).Click();
+                var fixFollowTb = Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.ScannerResultsFixFollowingTextBox));
                 Assert.IsFalse(string.IsNullOrEmpty(fixFollowTb.Text));
 
                 ValidateCurrentResultCount(AutomationIDs.ScannerResultsListView, expandedNonFrameworkResultsCount);
@@ -147,16 +147,16 @@ namespace UITests.UILibrary
 
         private void ValidateResultListIsCollapsed(string automationId)
         {
-            Assert.ThrowsException<WebDriverException>(() => Session.FindElementByAccessibilityId(automationId));
+            Assert.Throws<WebDriverException>(() => Session.FindElement(MobileBy.AccessibilityId(automationId)));
         }
 
         private void ValidateCurrentResultCount(string automationId, int expectedResultsCount)
         {
             if (expectedResultsCount > 0)
             {
-                var resultsList = Session.FindElementByAccessibilityId(automationId);
-                var results = resultsList.FindElementsByClassName("ListViewItem");
-                Assert.AreEqual(expectedResultsCount, results.Count);
+                var resultsList = Session.FindElement(MobileBy.AccessibilityId(automationId));
+                var results = resultsList.FindElements(MobileBy.ClassName("ListViewItem"));
+                Assert.HasCount(expectedResultsCount, results);
             }
             else
             {
@@ -164,10 +164,10 @@ namespace UITests.UILibrary
             }
         }
 
-        private IEnumerable<AppiumWebElement> GetPatternsNodes(string parentId, ReadOnlyCollection<AppiumWebElement> nonPatternNodes)
+        private IEnumerable<AppiumElement> GetPatternsNodes(string parentId, ReadOnlyCollection<AppiumElement> nonPatternNodes)
         {
-            var parent = Session.FindElementByAccessibilityId(parentId);
-            var allnodes = parent.FindElementsByClassName("TreeViewItem");
+            var parent = Session.FindElement(MobileBy.AccessibilityId(parentId));
+            var allnodes = parent.FindElements(MobileBy.ClassName("TreeViewItem"));
             var patterns = allnodes.Except(nonPatternNodes);
 
             foreach (var pattern in patterns)
@@ -175,7 +175,7 @@ namespace UITests.UILibrary
                 pattern.SendKeys(Keys.Right);
             }
 
-            allnodes = parent.FindElementsByClassName("TreeViewItem");
+            allnodes = parent.FindElements(MobileBy.ClassName("TreeViewItem"));
             return allnodes.Except(nonPatternNodes);
         }
     }

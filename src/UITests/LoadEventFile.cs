@@ -3,6 +3,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Reflection;
+using OpenQA.Selenium.Appium;
 
 namespace UITests
 {
@@ -35,7 +36,7 @@ namespace UITests
         private void CheckEventLog()
         {
             var eventGrid = driver.FindElementByAccessibilityId(AccessibilityInsights.SharedUx.Properties.AutomationIDs.EventModeControl);
-            var rows = eventGrid.FindElementsByClassName("DataGridRow");
+            var rows = eventGrid.FindElements(MobileBy.ClassName("DataGridRow"));
 
             rows[0].Click();
 
@@ -54,7 +55,7 @@ namespace UITests
         {
             // Click on 3rd event to see its properties
             var eventGrid = driver.FindElementByAccessibilityId(AccessibilityInsights.SharedUx.Properties.AutomationIDs.EventRecordControlEventsDataGrid);
-            var eventRows = eventGrid.FindElementsByClassName("DataGridRow");
+            var eventRows = eventGrid.FindElements(MobileBy.ClassName("DataGridRow"));
             eventRows[2].Click();
 
             // 10 rows from the event log and 10 from the event properties
@@ -67,14 +68,14 @@ namespace UITests
         private int GetNumEventDataRows()
         {
             var control = driver.FindElementByAccessibilityId(AccessibilityInsights.SharedUx.Properties.AutomationIDs.EventModeControl);
-            var rows = control.FindElementsByClassName("DataGridRow");
+            var rows = control.FindElements(MobileBy.ClassName("DataGridRow"));
             return rows.Count;
         }
 
         private int GetNumEventPropertyRows()
         {
             var control = driver.FindElementByAccessibilityId(AccessibilityInsights.SharedUx.Properties.AutomationIDs.EventModeControl);
-            var rows = control.FindElementsByClassName("ListViewItem");
+            var rows = control.FindElements(MobileBy.ClassName("ListViewItem"));
             return rows.Count;
         }
 

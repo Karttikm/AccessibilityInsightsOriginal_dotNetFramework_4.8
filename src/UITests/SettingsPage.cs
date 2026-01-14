@@ -3,6 +3,7 @@
 using AccessibilityInsights.SharedUx.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using GitHubAutomationIDs = AccessibilityInsights.Extensions.GitHub.Properties.AutomationIDs;
 
 namespace UITests
@@ -42,10 +43,10 @@ namespace UITests
             saveAndClose.Click();
 
             var pauseButton = driver.FindElementByAccessibilityId(AutomationIDs.MainWinPauseButton);
-            Assert.IsTrue(pauseButton.Text.Contains("Pause"), "Live mode should be running, but the pause button doesn't say 'Pause'");
+            Assert.Contains("Pause", pauseButton.Text, "Live mode should be running, but the pause button doesn't say 'Pause'");
             var mainWindow = driver.FindElementByAccessibilityId(AutomationIDs.MainWindow);
             mainWindow.SendKeys(Keys.Shift + Keys.F6);
-            Assert.IsTrue(pauseButton.Text.Contains("Resume"), "Live mode should be paused, but the pause button doesn't say 'Resume'");
+            Assert.Contains("Resume", pauseButton.Text, "Live mode should be paused, but the pause button doesn't say 'Resume'");
         }
 
         /// <summary>
@@ -80,15 +81,15 @@ namespace UITests
 
             var saveAndClose = driver.FindElementByAccessibilityId(AutomationIDs.SettingsSaveAndCloseButton);
             var connectionControl = driver.FindElementByAccessibilityId(AutomationIDs.ConnectionControl);
-            var radioButtons = connectionControl.FindElementsByClassName("RadioButton");
+            var radioButtons = connectionControl.FindElements(MobileBy.ClassName("RadioButton"));
 
             Assert.IsFalse(saveAndClose.Enabled, "Save and close should be disabled");
-            Assert.AreEqual(2, radioButtons.Count, "There should be two connection extensions");
-            Assert.IsTrue(radioButtons[0].Text.Contains("Azure Boards"), "The first connection should be Azure Boards");
-            Assert.IsTrue(radioButtons[1].Text.Contains("GitHub"), "The second connection should be GitHub");
+            Assert.HasCount(2, radioButtons, "There should be two connection extensions");
+            Assert.Contains("Azure Boards", radioButtons[0].Text, "The first connection should be Azure Boards");
+            Assert.Contains("GitHub", radioButtons[1].Text, "The second connection should be GitHub");
 
             radioButtons[1].Click();
-            var urlTb = connectionControl.FindElementByAccessibilityId(GitHubAutomationIDs.IssueConfigurationUrlTextBox);
+            var urlTb = connectionControl.FindElement(MobileBy.AccessibilityId(GitHubAutomationIDs.IssueConfigurationUrlTextBox));
             urlTb.SendKeys("https://github.com/microsoft/accessibility-insights-windows");
             Assert.IsTrue(saveAndClose.Enabled, "The save and close button should be enabled after configuring GitHub");
 

@@ -3,12 +3,13 @@
 using AccessibilityInsights.SharedUx.Properties;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
+using OpenQA.Selenium.Appium;
 
 namespace UITests.UILibrary
 {
     public class LiveMode
     {
-        readonly WindowsDriver<WindowsElement> Session;
+        readonly WindowsDriver Session;
 
         // These AutomationIDs came from inspecting the open file dialog with ai-win.
         // The assumption is that they are the same across machines--if they aren't,
@@ -17,27 +18,27 @@ namespace UITests.UILibrary
         const string OpenFileFileTextBoxAutomationID = "1148";
         const string OpenFileAllLocationsElementName = "All locations";
 
-        public string SelectedElementText => Session.FindElementByAccessibilityId(AutomationIDs.InspectTabsElementTextBlock).Text;
+        public string SelectedElementText => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.InspectTabsElementTextBlock)).Text;
 
-        public LiveMode(WindowsDriver<WindowsElement> session)
+        public LiveMode(WindowsDriver session)
         {
             Session = session;
         }
 
         public void OpenFile(string folder, string fileName)
         {
-            Session.FindElementByAccessibilityId(AutomationIDs.MainWinLoadButton).Click();
-            Session.FindElementByName(OpenFileAllLocationsElementName).Click();
+            Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.MainWinLoadButton)).Click();
+            Session.FindElement(MobileBy.Name(OpenFileAllLocationsElementName)).Click();
 
-            var folderTextbox = Session.FindElementByAccessibilityId(OpenFileFolderTextBoxAutomationID);
+            var folderTextbox = Session.FindElement(MobileBy.AccessibilityId(OpenFileFolderTextBoxAutomationID));
             folderTextbox.SendKeys(folder + Keys.Enter);
 
-            var fileTextbox = Session.FindElementByAccessibilityId(OpenFileFileTextBoxAutomationID);
+            var fileTextbox = Session.FindElement(MobileBy.AccessibilityId(OpenFileFileTextBoxAutomationID));
             fileTextbox.SendKeys(fileName + Keys.Enter);
         }
 
-        public void TogglePause() => Session.FindElementByAccessibilityId(AutomationIDs.MainWindow).SendKeys(Keys.Shift + Keys.F5);
+        public void TogglePause() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.MainWindow)).SendKeys(Keys.Shift + Keys.F5);
 
-        public void RunTests() => Session.FindElementByAccessibilityId(AutomationIDs.HierarchyControlTestElementButton).Click();
+        public void RunTests() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.HierarchyControlTestElementButton)).Click();
     }
 }

@@ -18,7 +18,7 @@ namespace UITests
     {
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
         private Process _process;
-        private WindowsDriver<WindowsElement> _session;
+        private WindowsDriver _session;
         protected AIWinDriver driver;
         public TestContext TestContext { get; set; }
 
@@ -83,9 +83,9 @@ namespace UITests
             {
                 _process.Refresh(); // updates process.MainWindowHandle
                 var options = new AppiumOptions();
-                options.AddAdditionalCapability("deviceName", "WindowsPC");
-                options.AddAdditionalCapability("appTopLevelWindow", _process.MainWindowHandle.ToString("x"));
-                _session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), options);
+                options.AddAdditionalAppiumOption("deviceName", "WindowsPC");
+                options.AddAdditionalAppiumOption("appTopLevelWindow", _process.MainWindowHandle.ToString("x"));
+                _session = new WindowsDriver(new Uri(WindowsApplicationDriverUrl), options);
             }
             catch { }
         }

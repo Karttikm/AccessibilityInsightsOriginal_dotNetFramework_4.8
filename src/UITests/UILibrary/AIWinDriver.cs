@@ -7,12 +7,13 @@ using OpenQA.Selenium.Appium.Windows;
 using System.IO;
 using System.Linq;
 using static System.FormattableString;
+using OpenQA.Selenium.Appium;
 
 namespace UITests.UILibrary
 {
     public class AIWinDriver
     {
-        readonly WindowsDriver<WindowsElement> Session;
+        readonly WindowsDriver Session;
         public GettingStarted GettingStarted { get; }
         public EventsMode EventsMode { get; }
         public Settings Settings { get; }
@@ -21,7 +22,7 @@ namespace UITests.UILibrary
 
         readonly int PID;
 
-        public AIWinDriver(WindowsDriver<WindowsElement> session, int pid)
+        public AIWinDriver(WindowsDriver session, int pid)
         {
             EventsMode = new EventsMode();
             Settings = new Settings();
@@ -66,13 +67,13 @@ namespace UITests.UILibrary
             Assert.AreEqual(expectedIssueCount, issueCount, $"axe.windows found accessibility issues, check {fileName}.a11ytest file in test artifacts");
         }
 
-        public WindowsElement FindElementByAccessibilityId(string accessibilityId) => Session.FindElementByAccessibilityId(accessibilityId);
+        public AppiumElement FindElementByAccessibilityId(string accessibilityId) => Session.FindElement(MobileBy.AccessibilityId(accessibilityId));
 
         public string Title => Session.Title;
 
-        public void ToggleHighlighter() => Session.FindElementByAccessibilityId(AutomationIDs.MainWinHighlightButton).Click();
+        public void ToggleHighlighter() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.MainWinHighlightButton)).Click();
 
-        public void GoToSettings() => Session.FindElementByAccessibilityId(AutomationIDs.MainWinSettingsButton).Click();
+        public void GoToSettings() => Session.FindElement(MobileBy.AccessibilityId(AutomationIDs.MainWinSettingsButton)).Click();
 
         public void Maximize() => Session.Manage().Window.Maximize();
 
