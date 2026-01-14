@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.CommonUxComponents.Dialogs;
 using AccessibilityInsights.SharedUx.Misc;
@@ -91,7 +91,13 @@ namespace AccessibilityInsights.SharedUx.Dialogs
         {
             try
             {
-                Process.Start(new ProcessStartInfo(VideoUrl));
+                var psi = new ProcessStartInfo
+                {
+                    FileName = VideoUrl,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                e.Handled = true;
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
@@ -125,7 +131,13 @@ namespace AccessibilityInsights.SharedUx.Dialogs
         {
             try
             {
-                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+                var psi = new ProcessStartInfo
+                {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                e.Handled = true;
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
