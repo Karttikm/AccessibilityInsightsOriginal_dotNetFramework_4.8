@@ -12,15 +12,14 @@ namespace AccessibilityInsights.SharedUxTests.KeyboardHelpers
     public class HotKeyUnitTests
     {
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetInstance_InputIsNull_ThrowsArgumentNullException()
         {
-            HotKey.GetInstance(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => HotKey.GetInstance(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetInstance_ShiftF10_PropertiesAreCorrect()
         {
             HotKey hotkey = HotKey.GetInstance("shift+F10");
@@ -29,7 +28,7 @@ namespace AccessibilityInsights.SharedUxTests.KeyboardHelpers
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetInstance_ControlShiftF9_PropertiesAreCorrect()
         {
             HotKey hotkey = HotKey.GetInstance("control,shift+F9");
@@ -38,7 +37,7 @@ namespace AccessibilityInsights.SharedUxTests.KeyboardHelpers
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetInstance_ControlShiftF9WithSpaces_PropertiesAreCorrect()
         {
             HotKey hotkey = HotKey.GetInstance(" control , shift + F9 ");

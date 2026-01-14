@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.SharedUx.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +15,7 @@ namespace AccessibilityInsights.SharedUxTests.Converters
             double expectedWidth = 6;
             ColumnMaxWidthSpacingConverter converter = new ColumnMaxWidthSpacingConverter();
 
-            Assert.AreEqual(converter.Convert(testWidth, typeof(double), null, null), expectedWidth);
+            Assert.AreEqual(expectedWidth, converter.Convert(testWidth, typeof(double), null, null));
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace AccessibilityInsights.SharedUxTests.Converters
             double expectedWidth = 8;
             ColumnMaxWidthSpacingConverter converter = new ColumnMaxWidthSpacingConverter();
 
-            Assert.AreEqual(converter.ConvertBack(testWidth, typeof(double), null, null), expectedWidth);
+            Assert.AreEqual(expectedWidth, converter.ConvertBack(testWidth, typeof(double), null, null));
         }
     }
 }

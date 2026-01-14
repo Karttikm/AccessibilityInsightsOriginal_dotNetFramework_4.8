@@ -38,7 +38,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsEnabled_SinkIsNotEnabled_ReturnsFalse()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(false);
@@ -49,7 +49,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsEnabled_SinkIsEnabled_ReturnsTrue()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(true);
@@ -60,21 +60,21 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ConvertFromProperties_InputIsNull_OutputIsNull()
         {
             Assert.IsNull(Logger.ConvertFromProperties(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ConvertFromProperties_InputIsTrivial_OutputIsNull()
         {
             Assert.IsNull(Logger.ConvertFromProperties(new Dictionary<TelemetryProperty, string>()));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ConvertFromProperties_InputIsNontrivial_OutputIsCorrect()
         {
             // Specific values of TelemetryProperty are unimportant for this test
@@ -91,14 +91,14 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_EventObject_EventIsNull_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Logger.PublishTelemetryEvent(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Logger.PublishTelemetryEvent(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_EventObject_EventIsNotNull_SinkIsNotEnabled_DoesNotChainToSink()
         {
             TelemetryEvent expectedEvent = new TelemetryEvent(Action1, new Dictionary<TelemetryProperty, string>
@@ -114,7 +114,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_MultiProperty_SinkIsNotEnabled_DoesNotChainToSink()
         {
             TelemetryPropertyBag expectedProperties = new Dictionary<TelemetryProperty, string>
@@ -131,7 +131,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_MultiProperty_SinkIsEnabled_ChainsToSink()
         {
             StringPropertyBag actualProperties = null;
@@ -152,7 +152,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_SingleProperty_SinkIsNotEnabled_DoesNotChainToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(false);
@@ -163,7 +163,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_SingleProperty_SinkIsEnabled_ChainsToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(true);
@@ -175,7 +175,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_SinkIsNotEnabled_DoesNotChainToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(false);
@@ -186,7 +186,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_SinkIsEnabled_ChainsToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(true);
@@ -198,14 +198,14 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_ExceptionIsNull_DoesNotChainToSink()
         {
             Logger.ReportException(null);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_SinkIsNotEnabled_DoesNotChainToSink()
         {
             Exception expectedException = new DivideByZeroException();
@@ -218,7 +218,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_SinkIsEnabled_ChainsToSink()
         {
             Exception expectedException = new OutOfMemoryException();
@@ -233,7 +233,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
 
         private void ValidatePropertyBag(TelemetryPropertyBag expected, StringPropertyBag actual)
         {
-            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.HasCount(expected.Count, actual);
             foreach (KeyValuePair<TelemetryProperty, string> pair in expected)
             {
                 Assert.AreEqual(pair.Value, actual[pair.Key.ToString()]);
@@ -241,7 +241,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_SinkIsNotEnabled_DoesNotChainToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(false);
@@ -252,7 +252,7 @@ namespace AccessibilityInsights.SharedUXTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_SinkIsEnabled_ChainsToSink()
         {
             _sinkMock.Setup(x => x.IsEnabled).Returns(true);

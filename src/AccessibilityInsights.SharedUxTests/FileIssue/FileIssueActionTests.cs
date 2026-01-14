@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.Extensions.Interfaces.IssueReporting;
 using AccessibilityInsights.SharedUx.FileIssue;
@@ -36,7 +36,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileNewBug_IsNotEnabled_ReturnsNull()
         {
             bool wasIssueFiled = false;
@@ -59,7 +59,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         /// Tests the shape of the telemetry we send when we file a bug with no rule
         /// </summary>
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileIssueAsync_NoRuleIsSpecified_SetsCorrectTelemetry()
         {
             IssueInformation expectedIssueInformation = new IssueInformation();
@@ -82,7 +82,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
 
             Assert.AreSame(issueResultMock.Object, result);
             Assert.AreSame(expectedIssueInformation, actualIssueInformation);
-            Assert.AreEqual(1, capturedTelemetry.Count);
+            Assert.HasCount(1, capturedTelemetry);
             Assert.AreEqual(DISPLAY_NAME, capturedTelemetry[0][TelemetryProperty.IssueReporter.ToString()]);
 
             _telemetrySinkMock.VerifyAll();
@@ -93,7 +93,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         /// Tests the shape of the telemetry we send when there is a specific rule failure
         /// </summary>
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileIssueAsync_RuleIsSpecified_SetsCorrectTelemetry()
         {
             const string expectedRule = "An awesome rule";
@@ -116,7 +116,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
 
             IIssueResult result = FileIssueAction.FileIssueAsync(expectedIssueInformation);
 
-            Assert.AreEqual(3, capturedTelemetry[0].Count);
+            Assert.HasCount(3, capturedTelemetry[0]);
             Assert.AreEqual(expectedRule, capturedTelemetry[0][TelemetryProperty.RuleId.ToString()]);
             Assert.AreEqual("", capturedTelemetry[0][TelemetryProperty.UIFramework.ToString()]);
             Assert.AreEqual(DISPLAY_NAME, capturedTelemetry[0][TelemetryProperty.IssueReporter.ToString()]);
@@ -126,7 +126,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileIssueAsync_ExceptionIsThrown_IsReportedToTelemetry()
         {
             Exception actualException = null;

@@ -86,7 +86,7 @@ namespace AccessibilityInsights.SharedUxTests.Settings
             ConfigurationModel config = GetDefaultConfig();
 
             Assert.IsTrue(config.AlwaysOnTop);
-            Assert.AreEqual("1.1.", config.AppVersion.Substring(0, 4));
+            Assert.AreEqual("1.0.", config.AppVersion.Substring(0, 4));
             ConfirmEnumerablesMatchExpectations(
                 new int[] { 30005, 30003, 30004, 30009, 30001, 30007, 30006, 30013, 30102, 30101 },
                 config.CoreProperties.ToArray());
@@ -125,7 +125,7 @@ namespace AccessibilityInsights.SharedUxTests.Settings
             Assert.AreEqual(TreeViewMode.Control, config.TreeViewMode);
             Assert.AreEqual(ReleaseChannel.Production, config.ReleaseChannel);
             Assert.AreEqual("1.1.10", config.Version);
-            Assert.AreEqual(37, typeof(ConfigurationModel).GetProperties().Length, "Count of ConfigurationModel properties has changed! Please ensure that you are testing the default value for all properties, then update the expected value");
+            Assert.HasCount(37, typeof(ConfigurationModel).GetProperties(), "Count of ConfigurationModel properties has changed! Please ensure that you are testing the default value for all properties, then update the expected value");
         }
 
         [TestMethod]
@@ -157,11 +157,11 @@ namespace AccessibilityInsights.SharedUxTests.Settings
 
         private static void ConfirmOverrideConfigMatchesExpectation(ConfigurationModel config,
             Guid? selectedIssueReporter = null, string issueReporterSerializedConfigs = null,
-            ReleaseChannel? releaseChannel = null, SoundFeedbackMode soundMode=SoundFeedbackMode.Auto,
+            ReleaseChannel? releaseChannel = null, SoundFeedbackMode soundMode = SoundFeedbackMode.Auto,
             bool shouldTestAllChromiumContent = false)
         {
             Assert.IsFalse(config.AlwaysOnTop);
-            Assert.AreEqual("1.1.", config.AppVersion.Substring(0, 4));
+            Assert.AreEqual("1.0.", config.AppVersion.Substring(0, 4));
             Assert.AreNotEqual("1.1.700.1", config.AppVersion);
             Assert.AreEqual(shouldTestAllChromiumContent, config.ShouldTestAllChromiumContent);
 
@@ -205,7 +205,7 @@ namespace AccessibilityInsights.SharedUxTests.Settings
 
         private static void ConfirmEnumerablesMatchExpectations(int[] expected, int[] actual)
         {
-            Assert.AreEqual(expected.Length, actual.Length);
+            Assert.HasCount(expected.Length, actual);
             for (int loop = 0; loop < expected.Length; loop++)
             {
                 Assert.AreEqual(expected[loop], actual[loop], "Index = " + loop.ToString(CultureInfo.InvariantCulture));

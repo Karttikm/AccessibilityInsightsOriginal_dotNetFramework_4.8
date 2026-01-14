@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.SharedUx.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +38,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_InstallationIdAndLastResetAreCorrectlySet()
         {
             DateTime[] dates = { January2015, February2015, January2016 };
@@ -55,7 +55,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void LoadFromPath_FileDoesNotExist_LastResetIsProvidedTime()
         {
             DateTime now = January2015;
@@ -70,7 +70,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void LoadFromPath_FileIsCurrent_FileIsNotRefreshed()
         {
             DateTime now = January2015;
@@ -85,7 +85,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void LoadFromPath_FileIsFromDifferentMonth_FileIsRefreshedWithProvidedTime()
         {
             DateTime now = February2015;
@@ -101,7 +101,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void LoadFromPath_FileIsFromDifferentYear_FileIsRefreshedWithProvidedTime()
         {
             DateTime now = January2016;
@@ -117,7 +117,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void LoadFromPath_FileIsFromDifferentMonth_UnableToWrite_ReturnsRefreshedDataEachTime()
         {
             // Intentionally don't set WriteToDiskOverride so that we try to write to disk.
@@ -138,7 +138,7 @@ namespace AccessibilityInsights.SharedUxTests.Utilities
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void LoadFromPath_RoundTripThroughDisk_FileIsNotRefreshed()
         {
             // Note: Not strictly a unit test since it pushes data through the disk

@@ -24,15 +24,16 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         private Guid TestGuid = Guid.Parse(TestGuidString);
 
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Constructor_AppConfigIsNull_ThrowsArgumentNullException()
         {
-            new IssueReporterManager(null, Enumerable.Empty<IIssueReporting>());
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
+
+                new IssueReporterManager(null, Enumerable.Empty<IIssueReporting>()));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Constructor_EnumerbleIsNull_DoesNotThrow()
         {
             ConfigurationModel configs = new ConfigurationModel();
@@ -41,7 +42,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Constructor_NoNullInputs_DoesNotThrow()
         {
             ConfigurationModel configs = new ConfigurationModel();
@@ -50,7 +51,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_Normal_DictionaryPopulated()
         {
             ConfigurationModel configs = new ConfigurationModel
@@ -70,7 +71,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_NullConfigs_NoRestore()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
@@ -87,7 +88,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_EmptyConfigs_NoRestore()
         {
             ConfigurationModel configs = GetConfigurationModel(string.Empty);
@@ -102,7 +103,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_WhitespaceConfigs_NoRestore()
         {
             ConfigurationModel configs = GetConfigurationModel(" ");
@@ -117,7 +118,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_EmptyReporterConfig_NoRestore()
         {
             ConfigurationModel configs = GetConfigurationModel("{\"" + TestGuidString + "\":\"\"}");
@@ -133,7 +134,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RestorePersistedConfigurations_NullReporterConfig_NoRestore()
         {
             ConfigurationModel configs = GetConfigurationModel("{\"" + RandomTestGuid + "\":\"\"}");
@@ -148,7 +149,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void SetIssueReporter_Valid_ReporterSet()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
@@ -163,7 +164,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void SetIssueReporter_ReporterNonExistent_ReporterUnset()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
@@ -178,18 +179,17 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void UpdateIssueReporterSettings_InputIsNull_ThrowsArgumentNullException()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
             IssueReporterManager repManager = new IssueReporterManager(configs, Enumerable.Empty<IIssueReporting>());
 
-            repManager.UpdateIssueReporterSettings(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => repManager.UpdateIssueReporterSettings(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void UpdateIssueReporterSettings_ReporterDoesNotSupportGetSettings_DoesNothing()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
@@ -203,7 +203,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void UpdateIssueReporterSettings_SettingNotInOriginalConfig_AddsToConfig()
         {
             ConfigurationModel configs = GetConfigurationModel(null);
@@ -218,7 +218,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void UpdateIssueReporterSettings_SettingInOriginalConfig_UpdatesConfig()
         {
             const string newSettings = "la di dah";
@@ -228,7 +228,7 @@ namespace AccessibilityInsights.SharedUxTests.FileIssue
             Mock<IIssueReporting> issueReportingMock = GetIssueReporterMock(
                 expectRestoreConfig: false, supportGetSerializedSettings: true,
                 newSettings: newSettings);
-            Assert.IsFalse(configs.IssueReporterSerializedConfigs.Contains(newSettings));
+            Assert.DoesNotContain(newSettings, configs.IssueReporterSerializedConfigs);
             Assert.AreEqual(TestReporterConfigs, GetIssueReporterConfig(configs, TestGuid));
 
             repManager.UpdateIssueReporterSettings(issueReportingMock.Object);

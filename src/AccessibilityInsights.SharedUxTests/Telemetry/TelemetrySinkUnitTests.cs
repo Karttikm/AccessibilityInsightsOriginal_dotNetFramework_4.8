@@ -54,7 +54,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsEnabled_NoTelemetryClassesExist_ReturnsFalse()
         {
             TelemetrySink sink = new TelemetrySink(new List<ITelemetry>(), true);
@@ -62,7 +62,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsEnabled_TelemetryIsDisabledByGroupPolicy_ReturnsFalse()
         {
             TelemetrySink sink = new TelemetrySink(new[] { _telemetryMock1.Object }, false);
@@ -70,21 +70,21 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsTelemetryAllowed_DefaultToFalse()
         {
             Assert.IsFalse(_telemetrySink.HasUserOptedIntoTelemetry);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsEnabled_IsTelemetryAllowedIsFalse_ReturnsFalse()
         {
             Assert.IsFalse(_telemetrySink.IsEnabled);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsEnabled_IsTelemetryAllowedIsTrue_ReturnsTrue()
         {
             _telemetrySink.HasUserOptedIntoTelemetry = true;
@@ -92,14 +92,14 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_SingleProperty_TelemetryNotAllowed_DoesNotPublish()
         {
             _telemetrySink.PublishTelemetryEvent(EventName1, PropertyName1, Value1);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_SingleProperty_TelemetryAllowed_PublishesCorrectEvent()
         {
             PropertyBag actualPropertyBag = null;
@@ -110,13 +110,13 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
 
             _telemetrySink.PublishTelemetryEvent(EventName1, PropertyName1, Value1);
 
-            Assert.AreEqual(1, actualPropertyBag.Count);
+            Assert.HasCount(1, actualPropertyBag);
             Assert.AreEqual(Value1, actualPropertyBag[PropertyName1]);
             _telemetryMock1.VerifyAll();
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_SingleProperty_TelemetryAllowed_ThrowsOnPublish_ReportsException()
         {
             Exception expectedExpection = new OutOfMemoryException();
@@ -131,7 +131,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_MultipleClasses_SingleProperty_TelemetryAllowed_PublishesCorrectEventToAll()
         {
             SetupMultipleTelemetryClasses();
@@ -147,8 +147,8 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
 
             _telemetrySink.PublishTelemetryEvent(EventName1, PropertyName1, Value1);
 
-            Assert.AreEqual(1, actualPropertyBag.Count);
-            Assert.AreEqual(1, actualPropertyBag2.Count);
+            Assert.HasCount(1, actualPropertyBag);
+            Assert.HasCount(1, actualPropertyBag2);
             Assert.AreEqual(Value1, actualPropertyBag[PropertyName1]);
             Assert.AreEqual(Value1, actualPropertyBag2[PropertyName1]);
             _telemetryMock1.VerifyAll();
@@ -156,7 +156,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_PropertyBag_TelemetryNotAllowed_DoesNotChain()
         {
             PropertyBag expectedPropertyBag = new Dictionary<string, string>
@@ -169,7 +169,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_PropertyBag_TelemetryAllowed_ChainsSameData()
         {
             PropertyBag expectedPropertyBag = new Dictionary<string, string>
@@ -186,7 +186,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishTelemetryEvent_PropertyBag_TelemetryAllowed_ThrowsOnPublish_ReportsException()
         {
             Exception expectedExpection = new OutOfMemoryException();
@@ -207,14 +207,14 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_TelemetryNotAllowed_DoesNotChain()
         {
             _telemetrySink.AddOrUpdateContextProperty(PropertyName1, Value1);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_TelemetryIsAllowed_ChainsSameData()
         {
             _telemetrySink.HasUserOptedIntoTelemetry = true;
@@ -226,7 +226,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_MultipleClasses_TelemetryIsAllowed_ChainsSameDataToAll()
         {
             SetupMultipleTelemetryClasses();
@@ -242,7 +242,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_TelemetryIsAllowed_TelemetryThrowsException_ReportsException()
         {
             Exception expectedExpection = new OutOfMemoryException();
@@ -257,7 +257,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AddOrUpdateContextProperty_MultipleClasses_TelemetryIsAllowed_TelemetryThrowsException_ReportsExceptionToAll()
         {
             SetupMultipleTelemetryClasses();
@@ -278,14 +278,14 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_TelemetryNotAllowed_DoesNotChain()
         {
             _telemetrySink.ReportException(new OutOfMemoryException());
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_TelemetryIsAllowed_ExceptionIsNull_DoesNotChain()
         {
             _telemetrySink.HasUserOptedIntoTelemetry = true;
@@ -293,7 +293,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_TelemetryIsAllowed_ChainsSameData()
         {
             Exception expectedException = new OutOfMemoryException();
@@ -307,7 +307,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_MultipleClasses_TelemetryIsAllowed_ChainsSameDataToAll()
         {
             SetupMultipleTelemetryClasses();
@@ -325,7 +325,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_TelemetryIsAllowed_TelemetryThrowsException_DoesNotReportSecondException()
         {
             Exception expectedException = new OutOfMemoryException();
@@ -341,7 +341,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_TelemetryIsAllowed_MultipleClasses_TelemetryThrowsException_DoesNotReportSecondException()
         {
             SetupMultipleTelemetryClasses();
@@ -361,14 +361,14 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_TelemetryIsNotAllowed_DoesNotChain()
         {
             _telemetrySink.FlushAndShutDown();
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_MultipleClasses_ChainsToAll()
         {
             SetupMultipleTelemetryClasses();
@@ -384,7 +384,7 @@ namespace AccessibilityInsights.SharedUxTests.Telemetry
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_MultipleClasses_FirstMockThrows_SecondMockIsStillCalled()
         {
             SetupMultipleTelemetryClasses();
