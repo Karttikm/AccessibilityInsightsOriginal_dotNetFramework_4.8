@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>AccessibilityInsights.Extensions.GitHubAutoUpdate</AssemblyName>
     <RootNamespace>AccessibilityInsights.Extensions.GitHubAutoUpdate</RootNamespace>
+    <TargetFramework>net10.0-windows</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\build\NetFrameworkRelease.targets" />

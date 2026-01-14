@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>AccessibilityInsights.CustomActionsUnitTests</AssemblyName>
     <RootNamespace>AccessibilityInsights.CustomActionsUnitTests</RootNamespace>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

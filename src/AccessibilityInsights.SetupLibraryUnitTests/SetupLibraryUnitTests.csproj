@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>AccessibilityInsights.SetupLibraryUnitTests</AssemblyName>
     <RootNamespace>AccessibilityInsights.SetupLibraryUnitTests</RootNamespace>
+    <TargetFramework>net10.0-windows</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\build\NetFrameworkTest.targets" />

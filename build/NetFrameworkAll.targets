@@ -1,14 +1,12 @@
 ﻿<!-- Copyright (c) Microsoft. All rights reserved.
      Licensed under the MIT license. See LICENSE file in the project root for full license information.-->
 <Project>
-
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <WarningsAsErrors />
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-
 </Project>

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>AccessibilityInsights.Extensions.DiskLoggingTelemetryTests</AssemblyName>
     <RootNamespace>AccessibilityInsights.Extensions.DiskLoggingTelemetryTests</RootNamespace>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

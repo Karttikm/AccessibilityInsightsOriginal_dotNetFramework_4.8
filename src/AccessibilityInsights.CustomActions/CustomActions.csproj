@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>AccessibilityInsights.CustomActions</AssemblyName>
     <RootNamespace>AccessibilityInsights.CustomActions</RootNamespace>
+    <TargetFramework>net10.0-windows</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\build\NetFrameworkRelease.targets" />

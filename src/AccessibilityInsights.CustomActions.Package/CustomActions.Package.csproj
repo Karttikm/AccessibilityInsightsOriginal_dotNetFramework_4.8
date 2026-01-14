@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>AccessibilityInsights.CustomActions.Package</RootNamespace>
     <AssemblyName>AccessibilityInsights.CustomActions</AssemblyName>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
