@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>AccessibilityInsights.CustomActions.Package</RootNamespace>
     <AssemblyName>AccessibilityInsights.CustomActions</AssemblyName>
@@ -17,8 +17,8 @@
     <!-- Manually overwrite assemblies with signed versions before packing everything up -->
     <ItemGroup>
       <SignedOverwriteFiles Include="$(SolutionDir)AccessibilityInsights.CustomActions\bin\$(Configuration)\net48\AccessibilityInsights.CustomActions.*" />
-      <SignedOverwriteFiles Include="$(SolutionDir)AccessibilityInsights\bin\$(Configuration)\net48\WixToolset.Dtf.WindowsInstaller.dll" />
-      <SignedOverwriteFiles Include="$(SolutionDir)AccessibilityInsights\bin\$(Configuration)\net48\Newtonsoft.Json.dll" />
+      <SignedOverwriteFiles Include="$(SolutionDir)AccessibilityInsights\bin\$(Configuration)\net10.0-windows\WixToolset.Dtf.WindowsInstaller.dll" />
+      <SignedOverwriteFiles Include="$(SolutionDir)AccessibilityInsights\bin\$(Configuration)\net10.0-windows\Newtonsoft.Json.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(SignedOverwriteFiles)" DestinationFolder="$(IntermediateOutputPath)" />
     <PropertyGroup>
