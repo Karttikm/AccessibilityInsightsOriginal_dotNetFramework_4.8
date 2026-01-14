@@ -44,23 +44,22 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Ctor_DictionaryIsEmpty()
         {
             SettingsDictionary settings = new SettingsDictionary();
-            Assert.AreEqual(0, settings.Count);
+            Assert.IsEmpty(settings);
         }
 
         [TestMethod]
-        [Timeout(2000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void CopyCtor_OriginalIsNull_ThrowsArgumentNullException()
         {
-            new SettingsDictionary(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => new SettingsDictionary(null));
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void CopyCtor_SettingsAreShallowCopied()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -72,15 +71,15 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             SettingsDictionary settings2 = new SettingsDictionary(settings1);
 
-            Assert.AreEqual(3, settings1.Count);
-            Assert.AreEqual(3, settings2.Count);
+            Assert.HasCount(3, settings1);
+            Assert.HasCount(3, settings2);
             Assert.AreEqual(settings1[Key1], settings2[Key1]);
             Assert.AreSame(settings1[Key2], settings2[Key2]);
             Assert.AreSame(settings1[Key3], settings1[Key3]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void SettingsAreCaseSensitive()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -90,13 +89,13 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
             Assert.IsFalse(settings.TryGetValue(Key1LowerCase, out _));
             settings.Add(Key1LowerCase, LongValue);
 
-            Assert.AreEqual(2, settings.Count);
+            Assert.HasCount(2, settings);
             Assert.AreEqual(StringValue, settings[Key1]);
             Assert.AreEqual(LongValue, settings[Key1LowerCase]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void CopyCtor_LongsAreConvertedToInt()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -106,14 +105,14 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             SettingsDictionary settings2 = new SettingsDictionary(settings1);
 
-            Assert.AreEqual(1, settings2.Count);
+            Assert.HasCount(1, settings2);
             Assert.AreEqual(typeof(int), settings2[Key1].GetType());
             Assert.AreNotEqual(LongValue, settings2[Key1]);
             Assert.AreEqual((int)LongValue, settings2[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void CopyCtor_JArrayIsConvertedToIntArray()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -123,17 +122,17 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             SettingsDictionary settings2 = new SettingsDictionary(settings1);
 
-            Assert.AreEqual(1, settings2.Count);
+            Assert.HasCount(1, settings2);
             Assert.AreEqual(typeof(int[]), settings2[Key1].GetType());
             int[] intArray = (int[])settings2[Key1];
-            Assert.AreEqual(3, intArray.Length);
+            Assert.HasCount(3, intArray);
             Assert.AreEqual(2, intArray[0]);
             Assert.AreEqual(4, intArray[1]);
             Assert.AreEqual(6, intArray[2]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapSetting_KeyDoesNotExist_ChangesNothing()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -143,12 +142,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapSetting(Key2, Key3);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual(BoolValue, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapSetting_KeyExists_ChangesKeyName()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -158,12 +157,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapSetting(Key1, Key2);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreSame(IntArrayValue, settings[Key2]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyDoesNotExist_ChangesNothing()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -173,12 +172,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<TestEnum>(Key2);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual((int)TestEnum.Default, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyExists_ValueIsLong_ValueIsValid_ReturnsCorrectEnum()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -188,12 +187,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<TestEnum>(Key1);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual(TestEnum.Option1.ToString(), settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyExists_ValueIsLong_ValueIsNotValid_ReturnsCorrectEnum()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -203,12 +202,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<TestEnum>(Key1);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual(LongValue, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyExists_ValueIsInt_ValueIsNotValid_ReturnsCorrectEnum()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -218,12 +217,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<TestEnum>(Key1);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual(IntValue, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyExists_ValueIsEnum_ChangesNothing()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -233,12 +232,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<TestEnum>(Key1);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual(TestEnum.Option2, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void RemapIntToEnumName_KeyExists_TypeIsNotEnum_ChangesNothing()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -248,13 +247,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             settings.RemapIntToEnumName<DateTime>(Key1);
 
-            Assert.AreEqual(1, settings.Count);
+            Assert.HasCount(1, settings);
             Assert.AreEqual((int)TestEnum.Option2, settings[Key1]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Diff_OtherIsNull_ThrowsArgumentNullException()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -264,11 +262,11 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
                 { Key3, LongValue },
             };
 
-            settings.Diff(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => settings.Diff(null));
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Diff_SameObjects_ReturnsEmptySet()
         {
             SettingsDictionary settings = new SettingsDictionary
@@ -278,11 +276,11 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
                 { Key3, LongValue },
             };
 
-            Assert.AreEqual(0, settings.Diff(settings).Count);
+            Assert.IsEmpty(settings.Diff(settings));
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Diff_OneValueChanges_CompatibleType_SameValue_ReturnsEmptySet()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -299,11 +297,11 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             IReadOnlyDictionary<string, object> diff = settings1.Diff(settings2);
 
-            Assert.AreEqual(0, diff.Count);
+            Assert.IsEmpty(diff);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Diff_OneValueChanges_IncompatibleType_ReturnsChangedValue()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -320,12 +318,12 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             IReadOnlyDictionary<string, object> diff = settings1.Diff(settings2);
 
-            Assert.AreEqual(1, diff.Count);
+            Assert.HasCount(1, diff);
             Assert.AreEqual(BoolValue, diff[Key2]);
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void Diff_OneValueChanges_CompatibleType_DifferntValue_ReturnsChangedValue()
         {
             SettingsDictionary settings1 = new SettingsDictionary
@@ -342,7 +340,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
 
             IReadOnlyDictionary<string, object> diff = settings1.Diff(settings2);
 
-            Assert.AreEqual(1, diff.Count);
+            Assert.HasCount(1, diff);
             Assert.AreEqual(IntValue + 1, diff[Key2]);
         }
     }

@@ -4,6 +4,7 @@ using AccessibilityInsights.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using static AccessibilityInsights.Win32.NativeMethods;
 
@@ -81,19 +82,93 @@ namespace AccessibilityInsights.SetupLibrary
 
         public static bool IsFileIssuingOrganizationTrusted(string filePath)
         {
-            using (X509Certificate cert = X509Certificate.CreateFromSignedFile(filePath))
+            // Try to load certificate using X509CertificateLoader if available (recommended API).
+            // Fall back to legacy CreateFromSignedFile when loader isn't present.
+            X509Certificate2 cert2 = null;
+            try
             {
-                string issuer = cert.Issuer;
-                foreach (string trustedCertIssuerEnding in TrustedCertIssuerEndings)
+                cert2 = LoadCertificateFromSignedFileUsingLoader(filePath) ?? LoadCertificateFromSignedFileFallback(filePath);
+                using (cert2)
                 {
-                    if (issuer.EndsWith(trustedCertIssuerEnding, StringComparison.Ordinal))
+                    string issuer = cert2.Issuer;
+                    foreach (string trustedCertIssuerEnding in TrustedCertIssuerEndings)
                     {
-                        return true;
+                        if (issuer.EndsWith(trustedCertIssuerEnding, StringComparison.Ordinal))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // If certificate loading fails, treat as untrusted.
+            }
+
+            return false;
+        }
+
+        private static X509Certificate2 LoadCertificateFromSignedFileUsingLoader(string filePath)
+        {
+            // Attempt to find a runtime-provided X509CertificateLoader type with a suitable method via reflection.
+            // This avoids hard compile-time dependency while using the recommended API when available.
+            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type loaderType = null;
+                try
+                {
+                    loaderType = asm.GetType("System.Security.Cryptography.X509Certificates.X509CertificateLoader", throwOnError: false, ignoreCase: false);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (loaderType == null)
+                    continue;
+
+                // Find a static method that accepts a single string and returns a certificate (X509Certificate or X509Certificate2).
+                foreach (MethodInfo mi in loaderType.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                {
+                    var parms = mi.GetParameters();
+                    if (parms.Length == 1 && parms[0].ParameterType == typeof(string))
+                    {
+                        if (typeof(X509Certificate2).IsAssignableFrom(mi.ReturnType) || typeof(X509Certificate).IsAssignableFrom(mi.ReturnType))
+                        {
+                            try
+                            {
+                                object result = mi.Invoke(null, new object[] { filePath });
+                                if (result is X509Certificate2 xc2)
+                                {
+                                    return xc2;
+                                }
+                                if (result is X509Certificate xc)
+                                {
+                                    return new X509Certificate2(xc);
+                                }
+                            }
+                            catch
+                            {
+                                // ignore and continue searching
+                            }
+                        }
                     }
                 }
             }
 
-            return false;
+            return null;
+        }
+
+        private static X509Certificate2 LoadCertificateFromSignedFileFallback(string filePath)
+        {
+            // Fallback to legacy API if loader not found.
+            // Keep the obsolete usage scoped and documented.
+#pragma warning disable SYSLIB0057 // Loading certificate data through the constructor or Import is obsolete. Use X509CertificateLoader instead to load certificates.
+            using (X509Certificate xc = X509Certificate.CreateFromSignedFile(filePath))
+            {
+                return new X509Certificate2(xc);
+            }
+#pragma warning restore SYSLIB0057
         }
 
         ~TrustVerifier()

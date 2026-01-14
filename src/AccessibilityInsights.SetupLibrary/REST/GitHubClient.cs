@@ -4,8 +4,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AccessibilityInsights.SetupLibrary.REST
 {
@@ -17,7 +18,7 @@ namespace AccessibilityInsights.SetupLibrary.REST
     {
         private class DownloadState
         {
-            public TriState Status { get; set; }
+            public TriState Status { get; set; } = TriState.Unknown;
             public Stream Stream { get; set; }
             public Action<int> ProgressCallback { get; set; }
             public int StreamLength { get; set; }
@@ -29,7 +30,8 @@ namespace AccessibilityInsights.SetupLibrary.REST
         /// <returns>Metadata about the stream</returns>
         public static StreamMetadata LoadUriContentsIntoStream(Uri uri, Stream stream, TimeSpan timeout, Action<int> progressCallback)
         {
-            Uri responseUri = null;
+            // Initialize to the requested URI so we always have a non-null URI to pass downstream.
+            Uri responseUri = uri;
 
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
@@ -43,29 +45,65 @@ namespace AccessibilityInsights.SetupLibrary.REST
 
             try
             {
-                using (InterceptingWebClient client = new InterceptingWebClient())
+                // Use shared HttpClient from factory to get the benefits of pooled connections.
+                HttpClient client = SharedHttpClientFactory.CreateClient();
+
+                // Enforce a cancellation-based timeout
+                using CancellationTokenSource cts = new CancellationTokenSource(timeout);
+
+                // Request headers only (so we can stream the response)
+                HttpResponseMessage response = client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                                                     .GetAwaiter()
+                                                     .GetResult();
+
+                response.EnsureSuccessStatusCode();
+
+                // If redirected, capture final URI; otherwise keep original
+                responseUri = response.RequestMessage?.RequestUri ?? responseUri;
+
+                long? contentLength = response.Content.Headers.ContentLength;
+
+                using Stream responseStream = response.Content.ReadAsStreamAsync(cts.Token).GetAwaiter().GetResult();
+
+                const int bufferSize = 81920;
+                byte[] buffer = new byte[bufferSize];
+                long totalRead = 0;
+                int lastReportedPercent = -1;
+
+                while (true)
                 {
-                    // Enforce SSL certificate checks
-                    ServicePointManager.CheckCertificateRevocationList = true;
-
-                    client.DownloadDataCompleted += DownloadCompleted;
-                    client.DownloadProgressChanged += ProgressChanged;
-                    client.DownloadDataAsync(uri, state);
-
-                    while (state.Status == TriState.Unknown)
+                    int read = Task.Run(() => responseStream.ReadAsync(buffer, 0, buffer.Length, cts.Token)).GetAwaiter().GetResult();
+                    if (read == 0)
                     {
-                        if (stopwatch.ElapsedMilliseconds > timeout.TotalMilliseconds)
-                        {
-                            state.Status = TriState.Failure;
-                            break;
-                        }
-                        Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                        break;
                     }
 
-                    responseUri = client.ResponseUri;
+                    stream.Write(buffer, 0, read);
+                    totalRead += read;
+
+                    if (progressCallback != null && contentLength.HasValue && contentLength.Value > 0)
+                    {
+                        int percent = (int)(totalRead * 100L / contentLength.Value);
+                        if (percent != lastReportedPercent)
+                        {
+                            lastReportedPercent = percent;
+                            progressCallback(percent);
+                        }
+                    }
                 }
+
+                // Ensure final 100% progress reported when length known
+                progressCallback?.Invoke(100);
+
+                // update state to success and length
+                state.Status = TriState.Success;
+                state.StreamLength = totalRead > int.MaxValue ? int.MaxValue : (int)totalRead;
             }
 #pragma warning disable CA1031 // Do not catch general exception types
+            catch (OperationCanceledException)
+            {
+                state.Status = TriState.Failure;
+            }
             catch (Exception)
             {
                 state.Status = TriState.Failure;
@@ -82,31 +120,6 @@ namespace AccessibilityInsights.SetupLibrary.REST
             }
 
             return new StreamMetadata(uri, responseUri, state.StreamLength);
-        }
-
-        private static void DownloadCompleted(object sender, DownloadDataCompletedEventArgs e)
-        {
-            DownloadState state = e.UserState as DownloadState;
-
-            try
-            {
-                state.Stream.Write(e.Result, 0, e.Result.Length);
-                state.Status = TriState.Success;
-                state.StreamLength = e.Result.Length;
-            }
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception)
-            {
-                state.Status = TriState.Failure;
-            }
-#pragma warning restore CA1031 // Do not catch general exception types
-        }
-
-        private static void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            DownloadState state = e.UserState as DownloadState;
-
-            state.ProgressCallback?.Invoke(e.ProgressPercentage);
         }
     }
 }

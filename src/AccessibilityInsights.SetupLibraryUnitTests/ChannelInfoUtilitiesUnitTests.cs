@@ -23,22 +23,19 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void GetChannelFromStream_StreamIsNull_ThrowsArgumentNullException()
         {
-            ChannelInfoUtilities.GetChannelFromStream(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
+                ChannelInfoUtilities.GetChannelFromStream(null));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidDataException))]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void GetChannelFromStream_StreamIsEmpty_ThrowsInvalidDataException()
         {
-            using (Stream stream = PopulateStream(string.Empty))
-            {
-                ChannelInfoUtilities.GetChannelFromStream(stream);
-            }
+            using var stream = PopulateStream(string.Empty);
+            Assert.ThrowsExactly<InvalidDataException>(() => ChannelInfoUtilities.GetChannelFromStream(stream));
         }
 
         private static void AssertValidUri(string url)
@@ -50,7 +47,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(5000)]
+        [Timeout(5000, CooperativeCancellation = true)]
         public void TryGetChannelInfo_CanaryChannel_ReturnsReasonableData()
         {
             List<Exception> exceptions = new List<Exception>();
@@ -75,13 +72,13 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
                 Assert.IsTrue(info.IsValid);
                 AssertValidUri(info.InstallAsset);
                 AssertValidUri(info.ReleaseNotesAsset);
-                Assert.AreEqual(0, exceptions.Count);
+                Assert.IsEmpty(exceptions);
             }
             else
             {
                 Assert.IsNull(info);
                 Assert.AreNotEqual(0, exceptions.Count);
-                Assert.Inconclusive(string.Join(Environment.NewLine, exceptions));  
+                Assert.Inconclusive(string.Join(Environment.NewLine, exceptions));
             }
         }
     }

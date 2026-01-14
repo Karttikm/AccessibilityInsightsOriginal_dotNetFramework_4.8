@@ -17,7 +17,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         private const string CommandMsiPath = "https://azure.com/this/is/where/the/msi/is/found";
         private const string CommandMsiSize = "79";
         private const string CommandNewChannel = "TestChannel";
-        private readonly string TestFile =  Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\..\..\..\TestFiles\SampleFile.txt"));
+        private readonly string TestFile = Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\..\..\..\TestFiles\SampleFile.txt"));
         private const int TestFileSize = 79;
         private const int BadTestFileSize = TestFileSize + 1;
         private const string TestFileSha512 = "B53D5F87E96D5D69F22EA229E4205B474D51CF068D04C03C223F87759E28DE35DC8118C8BB0AD70732BB0DCD60A60A0F4B5C5DE9B5147FB0B01E9091A79155AD";
@@ -44,7 +44,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void GetInstallationOptions_ZeroParameters_ThrowsResultBearingException()
         {
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
@@ -52,7 +52,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         public void GetInstallationOptions_OneParameter_ThrowsResultBearingException()
         {
             _commandLineArgs = new string[] { CommandIgnored };
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
@@ -60,7 +60,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         public void GetInstallationOptions_TwoParameters_ThrowsResultBearingException()
         {
             _commandLineArgs = new string[] { CommandIgnored, CommandMsiPath };
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
@@ -68,15 +68,15 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         public void GetInstallationOptions_ThreeParameters_ThrowsResultBearingException()
         {
             _commandLineArgs = new string[] { CommandIgnored, CommandMsiPath, CommandMsiSize };
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
         [TestMethod]
         public void GetInstallationOptions_SizeIsNotAnInteger_ThrowsResultBearingException()
         {
-            _commandLineArgs = new string[] { CommandIgnored, CommandMsiPath, "not an integer", TestFileSha512};
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            _commandLineArgs = new string[] { CommandIgnored, CommandMsiPath, "not an integer", TestFileSha512 };
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
@@ -84,7 +84,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         public void GetInstallationOptions_PathIsNotValid_ThrowsResultBearingException()
         {
             _commandLineArgs = new string[] { CommandIgnored, "Not a valid url", CommandMsiSize, TestFileSha512 };
-            var e = Assert.ThrowsException<ResultBearingException>(() => _engine.GetInstallationOptions());
+            var e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.GetInstallationOptions());
             Assert.AreEqual(ExecutionResult.ErrorBadCommandLine, e.Result);
         }
 
@@ -164,7 +164,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void ValidateFileProperties_SizeIsOmitted_ShaIsBad_ThrowsResultBearingException()
         {
-            ResultBearingException e = Assert.ThrowsException<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, TestFileSize, BadTestFileSha512));
+            ResultBearingException e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, TestFileSize, BadTestFileSha512));
             Assert.AreEqual(ExecutionResult.ErrorMsiSha512Mismatch, e.Result);
             AssertCorrectTelemetryValuesForValidateFileProperties();
         }
@@ -188,7 +188,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void ValidateFileProperties_SizeIsCorrect_ShaIsBad_ThrowsResultBearingException()
         {
-            ResultBearingException e = Assert.ThrowsException<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, TestFileSize, BadTestFileSha512));
+            ResultBearingException e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, TestFileSize, BadTestFileSha512));
             Assert.AreEqual(ExecutionResult.ErrorMsiSha512Mismatch, e.Result);
             AssertCorrectTelemetryValuesForValidateFileProperties();
         }
@@ -196,7 +196,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void ValidateFileProperties_SizeIsBad_ShaIsOmitted_ThrowsResultBearingException()
         {
-            ResultBearingException e = Assert.ThrowsException<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, null));
+            ResultBearingException e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, null));
             Assert.AreEqual(ExecutionResult.ErrorMsiSizeMismatch, e.Result);
             AssertCorrectTelemetryValuesForValidateFileProperties();
         }
@@ -204,7 +204,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void ValidateFileProperties_SizeIsBad_ShaIsCorrect_ThrowsResultBearingException()
         {
-            ResultBearingException e = Assert.ThrowsException<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, TestFileSha512));
+            ResultBearingException e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, TestFileSha512));
             Assert.AreEqual(ExecutionResult.ErrorMsiSizeMismatch, e.Result);
             AssertCorrectTelemetryValuesForValidateFileProperties();
         }
@@ -212,7 +212,7 @@ namespace AccessibilityInsights.VersionSwitcherUnitTests
         [TestMethod]
         public void ValidateFileProperties_SizeIsBad_ShaIsBad_ThrowsResultBearingException()
         {
-            ResultBearingException e = Assert.ThrowsException<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, BadTestFileSha512));
+            ResultBearingException e = Assert.ThrowsExactly<ResultBearingException>(() => _engine.ValidateFileProperties(TestFile, BadTestFileSize, BadTestFileSha512));
             Assert.AreEqual(ExecutionResult.ErrorMsiSizeMismatch, e.Result);
             AssertCorrectTelemetryValuesForValidateFileProperties();
         }

@@ -15,7 +15,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         private static readonly Version VersionHigh = new Version(1, 2);
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_EmptyObject_IsNotValid()
         {
             ChannelInfo channelInfo = new ChannelInfo();
@@ -23,7 +23,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_TypicalData_IsTrue()
         {
             ChannelInfo channelInfo = new ChannelInfo
@@ -37,7 +37,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_MissingCurrentVersion_IsFalse()
         {
             ChannelInfo channelInfo = new ChannelInfo
@@ -50,7 +50,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_MissingMinimumVersion_IsFalse()
         {
             ChannelInfo channelInfo = new ChannelInfo
@@ -63,7 +63,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_MissingInstallAsset_IsFalse()
         {
             ChannelInfo channelInfo = new ChannelInfo
@@ -76,7 +76,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_MissingReleaseNotesAsset_IsFalse()
         {
             ChannelInfo channelInfo = new ChannelInfo
@@ -89,7 +89,7 @@ namespace AccessibilityInsights.SetupLibraryUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void IsValid_MinimumVersionExceedsCurrentVersion_IsFalse()
         {
             ChannelInfo channelInfo = new ChannelInfo

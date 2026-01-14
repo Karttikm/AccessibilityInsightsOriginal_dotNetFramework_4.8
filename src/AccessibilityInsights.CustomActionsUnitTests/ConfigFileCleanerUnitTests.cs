@@ -67,8 +67,8 @@ namespace AccessibilityInsights.CustomActionsUnitTests
                 .Callback<string>(message => logMessages.Add(message));
 
             Assert.AreEqual(ActionResult.Success, _cleaner.RunAction());
-            Assert.AreEqual(1, logMessages.Count);
-            Assert.IsTrue(logMessages[0].Contains("AccessViolationException"));
+            Assert.HasCount(1, logMessages);
+            Assert.Contains("AccessViolationException", logMessages[0]);
 
             _systemShimMock.VerifyAll();
         }

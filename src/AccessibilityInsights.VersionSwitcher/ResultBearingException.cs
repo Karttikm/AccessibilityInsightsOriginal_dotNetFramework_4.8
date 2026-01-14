@@ -11,7 +11,6 @@ namespace AccessibilityInsights.VersionSwitcher
     /// The exception type thrown within VersionSwitcher. It extends Exception to
     /// specify a VersionSwitcherResult property.
     /// </summary>
-    [Serializable]
     public class ResultBearingException : Exception
     {
         public ExecutionResult Result { get; set; }
@@ -32,12 +31,5 @@ namespace AccessibilityInsights.VersionSwitcher
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException("parameter must be non-trivial", nameof(message));
             Result = result;
         }
-
-        /// <summary>
-        /// Serialization constructor
-        /// </summary>
-        protected ResultBearingException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        { }
     }
 }
