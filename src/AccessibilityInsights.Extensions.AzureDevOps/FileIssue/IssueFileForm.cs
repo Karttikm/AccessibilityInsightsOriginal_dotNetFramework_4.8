@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.Extensions.Helpers;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -48,17 +49,23 @@ namespace AccessibilityInsights.Extensions.AzureDevOps.FileIssue
         /// <summary>
         /// Value to zoom the embedded web browser by
         /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ZoomValue { get; set; }
 
         /// <summary>
         /// Represents the id of the issue filed in this window after ShowDialog() returns
         /// (null if no issue was filed)
         /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int? IssueId { get; internal set; }
 
         /// <summary>
         /// Javascript code to run once page is loaded
         /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ScriptToRun { get; set; }
 
         /// <summary>

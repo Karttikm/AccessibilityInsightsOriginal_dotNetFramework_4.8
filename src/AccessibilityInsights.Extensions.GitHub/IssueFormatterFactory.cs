@@ -33,7 +33,7 @@ namespace AccessibilityInsights.Extensions.GitHub
                 link,
                 formatter.GetFormattedTitle(),
                 formatter.GetFormattedBody());
-            string escapedURL = Uri.EscapeUriString(FormattedURL).Replace("#", "%23");
+            string escapedURL = Uri.EscapeDataString(FormattedURL).Replace("#", "%23");
 
             return escapedURL;
         }

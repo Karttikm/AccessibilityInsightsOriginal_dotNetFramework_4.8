@@ -92,7 +92,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOps
                 Disconnect();
                 var credentials = new VssClientCredentials(false)
                 {
-                    Storage = new VssClientCredentialStorage(),
+                    Storage = new VssClientCredentialStorage("default", null),
                     PromptType = prompt
                 };
                 _baseServerConnection = new VssConnection(url, credentials);
