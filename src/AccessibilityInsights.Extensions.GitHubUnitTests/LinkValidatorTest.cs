@@ -11,11 +11,10 @@ namespace AccessibilityInsights.Extensions.GitHubUnitTests
     public class LinkValidatorTest
     {
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IsValidGitHubRepoLink_LinkIsNull_ThrowsArgumentNullException()
         {
-            LinkValidator.IsValidGitHubRepoLink(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => LinkValidator.IsValidGitHubRepoLink(null));
         }
 
         [TestMethod]

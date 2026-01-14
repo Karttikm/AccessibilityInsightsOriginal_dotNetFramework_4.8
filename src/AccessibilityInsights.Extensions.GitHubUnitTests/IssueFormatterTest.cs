@@ -12,11 +12,11 @@ namespace AccessibilityInsights.Extensions.GitHubUnitTests
     public class IssueFormatterTest
     {
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetNewIssue_IssueInfoIsNull_ThrowsArgumentNullException()
         {
-            IssueFormatterFactory.GetNewIssueLink(string.Empty, null);
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
+                IssueFormatterFactory.GetNewIssueLink(string.Empty, null));
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace AccessibilityInsights.Extensions.GitHubUnitTests
                link,
                formatter.GetFormattedTitle(),
                formatter.GetFormattedBody());
-            string escapedURL = Uri.EscapeUriString(FormattedURL).Replace("#", "%23");
+            string escapedURL = Uri.EscapeDataString(FormattedURL).Replace("#", "%23");
 
             return escapedURL;
         }

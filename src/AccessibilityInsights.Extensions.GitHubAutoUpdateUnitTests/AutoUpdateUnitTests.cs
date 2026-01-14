@@ -108,7 +108,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void ReleaseChannel_DefaultsToExpectedValue()
         {
             IAutoUpdate update = BuildAutoUpdate();
@@ -117,7 +117,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void ReleaseChannel_CanBeOverriddenInConstructor()
         {
             const ReleaseChannel testReleaseChannel = ReleaseChannel.Insider;
@@ -126,7 +126,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_UnableToGetInstalledVersion_ReturnsUnknown_FieldsAreNull()
         {
             AutoUpdate update = BuildAutoUpdate(testInstalledVersion: "blah");
@@ -139,7 +139,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_UnableToGetConfig_ReturnsUnknown_FieldsAreNull()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel);
@@ -154,7 +154,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ConfigIsInvalid_ReturnsUnknown_FieldsAreNull()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel,
@@ -173,7 +173,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ConfigShowsNoUpgrade_ReturnsCurrent_ReturnsNoUpgrade()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, NoUpgradeChannelInfo);
@@ -188,7 +188,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ConfigShowsOptionalUpgrade_ReturnsOptionalUpgrade()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, OptionalUpgradeChannelInfo);
@@ -203,7 +203,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ConfigShowsRequiredUpgrade_ReturnsRequiredUpgrade()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, RequiredUpgradeChannelInfo);
@@ -218,7 +218,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ConfigShowsPrereleaseBuild_ReturnsNewerThanCurrent()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, PreReleaseChannelInfo);
@@ -233,7 +233,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_ReleaseChannelIsOverridden_UsesCorrectChannel()
         {
             const ReleaseChannel testReleaseChannel = ReleaseChannel.Canary;
@@ -249,7 +249,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateAsync_ConfigNotAvailable_ReturnsNoUpgradeAvailable()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel);
@@ -259,7 +259,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateAsync_ConfigShowsNoUpgrade_ReturnsNoUpgradeAvailable()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, NoUpgradeChannelInfo);
@@ -269,7 +269,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateOptionAsync_InitializationTimeIsNotZero()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, NoUpgradeChannelInfo);
@@ -282,7 +282,7 @@ namespace Extensions.GitHubAutoUpdateUnitTests
         }
 
         [TestMethod]
-        [Timeout(2000)]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void UpdateAsync_UpdateTimeIsNotZero()
         {
             Mock<IChannelInfoProvider> providerMock = BuildChannelInfoProvider(DefaultReleaseChannel, NoUpgradeChannelInfo);
