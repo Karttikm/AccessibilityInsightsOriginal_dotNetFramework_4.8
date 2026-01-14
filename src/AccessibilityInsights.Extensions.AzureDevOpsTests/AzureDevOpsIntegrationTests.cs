@@ -15,21 +15,21 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         static readonly Uri SlashTestUri = new Uri("https://myaccount.visualstudio.com/");
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetTeamProjectUri_ProjectNameIsNull_ReturnsNull()
         {
             Assert.IsNull(new AzureDevOpsIntegration().GetTeamProjectUri(null, TestTeam));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetTeamProjectUri_NotConnected_ReturnsNull()
         {
             Assert.IsNull(new AzureDevOpsIntegration().GetTeamProjectUri(TestProject, TestTeam));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetTeamProjectUriInternal_TeamIsNotNull_ReturnsExpectedUri()
         {
             const string expectedUri = "https://myaccount.visualstudio.com/my%20project/my%20team";
@@ -42,7 +42,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TestGetTeamProjectUriInternal_TeamIsNull_ReturnsExpectedUri()
         {
             const string expectedUri = "https://myaccount.visualstudio.com/my%20project";
@@ -55,7 +55,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void EscapeForUrl_InputHasNoSubstitutions_ReturnsExpectedUri()
         {
             const string inputUri = "https://www.github.com/accessibility-insights-windows/issues?text=This is some text";
@@ -67,7 +67,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void EscapeForUrl_InputHasMiddleDots_ReturnsExpectedUri()
         {
             const string inputUri = "https://www.github.com/accessibility-insights-windows/issues?text=This·has·middle·dots";
@@ -79,7 +79,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void EscapeForUrl_InputHasNonBreakingSpaces_ReturnsExpectedUri()
         {
             const string inputUri = "https://www.github.com/accessibility-insights-windows/issues?text=This\u00a0has\u00a0non-breaking\u00a0spaces";
@@ -91,7 +91,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void EscapeForUrl_InputHasHighCharacters_ReturnsExpectedUri()
         {
             const string inputUri = "https://www.github.com/accessibility-insights-windows/issues?text=This\u0080has\u0090high\u00b0characters";

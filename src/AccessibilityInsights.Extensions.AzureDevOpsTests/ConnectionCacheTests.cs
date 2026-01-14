@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.Extensions.AzureDevOps;
 using AccessibilityInsights.Extensions.AzureDevOps.Models;
@@ -21,7 +21,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         /// MRU should be null when empty
         /// </summary>
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TestEmpty()
         {
             ConnectionCache cache = new ConnectionCache();
@@ -32,7 +32,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         /// should only hold "capacity" objects
         /// </summary>
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TestCapacity()
         {
             ConnectionCache cache = new ConnectionCache();
@@ -51,7 +51,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         /// various manipulations, check ordering
         /// </summary>
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TestOrder()
         {
             ConnectionCache cache = new ConnectionCache();
@@ -93,7 +93,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_ConfigStringIsTrivial_CacheIsEmpty()
         {
             ConnectionCache cache = new ConnectionCache(null);
@@ -101,7 +101,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_ConfigStringIsInvalidJson_CacheIsEmpty()
         {
             ConnectionCache cache = new ConnectionCache("This isn't valid Json");
@@ -109,12 +109,12 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_ConfigStringIsValidJson_CacheIsCorrect()
         {
             ConnectionCache cache = new ConnectionCache(KnownConfigString);
             List<Uri> connections = cache.GetCachedConnections().ToList();
-            Assert.AreEqual(2, connections.Count);
+            Assert.HasCount(2, connections);
 
             ConnectionInfo info1 = GetConnectionInfo(1, true);
             ConnectionInfo info2 = GetConnectionInfo(2, true);
@@ -133,7 +133,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ToConfigString_MatchesExpectedString()
         {
             // Note: This test might break if the serialization order changes

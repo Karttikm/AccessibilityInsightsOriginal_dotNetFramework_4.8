@@ -33,15 +33,16 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(2000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(2000, CooperativeCancellation = true)]
         public void CreateIssuePreviewAsync_IssueInfoIsNull_ThrowsArgumentNullException()
         {
-            _fileIssueHelpers.CreateIssuePreviewAsync(new ConnectionInfo(), null);
+
+            Assert.Throws<ArgumentNullException>(() =>
+                   _fileIssueHelpers.CreateIssuePreviewAsync(new ConnectionInfo(), null));
         }
 
         [TestMethod]
-        [Timeout(10000)]
+        [Timeout(10000, CooperativeCancellation = true)]
         public void RemoveInternalFromIssueText_MatchingTextExists()
         {
             var guid = Guid.NewGuid().ToString();
@@ -53,7 +54,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(10000)]
+        [Timeout(10000, CooperativeCancellation = true)]
         public void RemoveInternalFromIssueText_NoMatchingText()
         {
             var guid = Guid.NewGuid().ToString();
@@ -65,7 +66,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void WrapInHtmlBody_AddsExtraData()
         {
             string original = "<br><br><div><hr>This is the original text<hr></div>";
@@ -75,15 +76,14 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileNewIssue_FileIssueIsNull_ThrowsArgumentNullException()
         {
-            _fileIssueHelpers.FileNewIssue(null, new ConnectionInfo(), false, 100, (unused) => { Assert.Fail("This method should never be called"); }, "sample_configuration_path");
+            Assert.Throws<ArgumentNullException>(() => _fileIssueHelpers.FileNewIssue(null, new ConnectionInfo(), false, 100, (unused) => { Assert.Fail("This method should never be called"); }, "sample_configuration_path"));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileNewIssue_GetAreaPathReturnsNull_ReturnsPlaceholder()
         {
             var connInfo = new ConnectionInfo(new Uri("https://accessibilityinsights.io"),
@@ -105,7 +105,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileNewIssue_GetIterationReturnsNull_ReturnsPlaceholder()
         {
             var connInfo = new ConnectionInfo(new Uri("https://accessibilityinsights.io"),
@@ -127,7 +127,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FileNewIssue_FieldsAreValid_ReturnsExpectedData()
         {
             AzureDevOps.Models.AdoTeam expectedAdoTeam = new AzureDevOps.Models.AdoTeam(TestTeamName, Guid.Empty);
@@ -152,7 +152,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
             Assert.AreEqual(TestIssueId, output.issueId);
             Assert.IsNotNull(output.newIssueId);
             Assert.AreEqual(TestIssueGuidString, output.newIssueId);
-            Assert.AreEqual(5, actualFields.Count);
+            Assert.HasCount(5, actualFields);
             Assert.IsFalse(string.IsNullOrEmpty(actualFields[AzureDevOpsField.Title]));
             Assert.IsFalse(string.IsNullOrEmpty(actualFields[AzureDevOpsField.Tags]));
             Assert.IsFalse(string.IsNullOrEmpty(actualFields[AzureDevOpsField.ReproSteps]));
@@ -163,86 +163,111 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
 
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateString_OriginalStringIsNull_ReturnsNull()
         {
             const string originalString = null;
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("TruncateString", originalString, 3, "!!!") as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateString",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+
+            string result = method.Invoke(null, new object[] { originalString, 3, "!!!" }) as string;
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateString_OriginalStringIsWithinLimit_ReturnsOriginalString()
         {
             const string originalString = "abc";
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("TruncateString", originalString, 3, "!!!") as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateString",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString, 3, "!!!" }) as string;
             Assert.AreEqual(originalString, result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateString_OriginalStringExceedsLimit_ReturnsTruncatedOriginalStringbWithSuffix()
         {
             const string originalString = "abcd";
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("TruncateString", originalString, 3, "!!!") as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateString",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString, 3, "!!!" }) as string;
             Assert.AreEqual("abc!!!", result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RemoveSurroundingBrackets_OriginalStringIsNull_ReturnsNull()
         {
             const string originalString = null;
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("RemoveSurroundingBrackets", originalString) as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "RemoveSurroundingBrackets",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString }) as string;
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RemoveSurroundingBrackets_OriginalStringHasNoLeadingBracket_ReturnsOriginalString()
         {
             const string originalString = "abc]";
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("RemoveSurroundingBrackets", originalString) as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "RemoveSurroundingBrackets",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString }) as string;
             Assert.AreEqual(originalString, result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RemoveSurroundingBrackets_OriginalStringHasNoTrailingBracket_ReturnsOriginalString()
         {
             const string originalString = "[abc";
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("RemoveSurroundingBrackets", originalString) as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "RemoveSurroundingBrackets",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString }) as string;
             Assert.AreEqual(originalString, result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void RemoveSurroundingBrackets_OriginalStringHasLeadingAndTrailingBrackets_ReturnsSubstring()
         {
             const string originalString = "[abc]";
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            string result = privateFileIssueHelpers.InvokeStatic("RemoveSurroundingBrackets", originalString) as string;
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "RemoveSurroundingBrackets",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            string result = method.Invoke(null, new object[] { originalString }) as string;
             Assert.AreEqual("abc", result);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateSelectedFields_AllFieldsNull_AddsNullValues()
         {
             Dictionary<IssueField, string> issueFieldPairs = new Dictionary<IssueField, string>();
             IssueInformation issueInfo = new IssueInformation();
 
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            privateFileIssueHelpers.InvokeStatic("TruncateSelectedFields", issueInfo, issueFieldPairs);
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateSelectedFields",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            method.Invoke(null, new object[] { issueInfo, issueFieldPairs });
 
-            Assert.AreEqual(4, issueFieldPairs.Count);
+            Assert.HasCount(4, issueFieldPairs);
             Assert.IsNull(issueFieldPairs[IssueField.ProcessName]);
             Assert.IsNull(issueFieldPairs[IssueField.Glimpse]);
             Assert.IsNull(issueFieldPairs[IssueField.TestMessages]);
@@ -250,17 +275,20 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateSelectedFields_ProcessNameIsSpecified_AddsProcessNameValue()
         {
             string originalProcessName = new string('x', 60);
             Dictionary<IssueField, string> issueFieldPairs = new Dictionary<IssueField, string>();
             IssueInformation issueInfo = new IssueInformation(processName: originalProcessName);
 
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            privateFileIssueHelpers.InvokeStatic("TruncateSelectedFields", issueInfo, issueFieldPairs);
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateSelectedFields",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            method.Invoke(null, new object[] { issueInfo, issueFieldPairs });
 
-            Assert.AreEqual(4, issueFieldPairs.Count);
+            Assert.HasCount(4, issueFieldPairs);
             string modifiedProcessName = issueFieldPairs[IssueField.ProcessName];
             Assert.AreEqual(new string('x', 50) + ".exe", modifiedProcessName);
             Assert.IsNull(issueFieldPairs[IssueField.Glimpse]);
@@ -269,17 +297,20 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateSelectedFields_GlimpseIsSpecified_AddsGlimpseValue()
         {
             string originalGlimpse = new string('y', 60);
             Dictionary<IssueField, string> issueFieldPairs = new Dictionary<IssueField, string>();
             IssueInformation issueInfo = new IssueInformation(glimpse: originalGlimpse);
 
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            privateFileIssueHelpers.InvokeStatic("TruncateSelectedFields", issueInfo, issueFieldPairs);
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateSelectedFields",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            method.Invoke(null, new object[] { issueInfo, issueFieldPairs });
 
-            Assert.AreEqual(4, issueFieldPairs.Count);
+            Assert.HasCount(4, issueFieldPairs);
             string modifiedGlimpse = issueFieldPairs[IssueField.Glimpse];
             Assert.AreEqual(new string('y', 50) + "...", modifiedGlimpse);
             Assert.IsNull(issueFieldPairs[IssueField.ProcessName]);
@@ -288,17 +319,20 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateSelectedFields_TestMessagesIsSpecified_AddsTestMessagesValue()
         {
             string originalTestMessages = new string('z', 200);
             Dictionary<IssueField, string> issueFieldPairs = new Dictionary<IssueField, string>();
             IssueInformation issueInfo = new IssueInformation(testMessages: originalTestMessages);
 
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            privateFileIssueHelpers.InvokeStatic("TruncateSelectedFields", issueInfo, issueFieldPairs);
+            var method = typeof(FileIssueHelpers).GetMethod(
+                    "TruncateSelectedFields",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+                );
+            method.Invoke(null, new object[] { issueInfo, issueFieldPairs });
 
-            Assert.AreEqual(4, issueFieldPairs.Count);
+            Assert.HasCount(4, issueFieldPairs);
             string modifiedTestMessages = issueFieldPairs[IssueField.TestMessages];
             Assert.AreEqual(new string('z', 150) + "...open attached", modifiedTestMessages.Substring(0, 166));
             Assert.IsNull(issueFieldPairs[IssueField.ProcessName]);
@@ -307,7 +341,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TruncateSelectedFields_RuleSourceIsSpecified_AddsRuleSourceValue()
         {
             const string ruleSourceContent = "weather: cold and clear";
@@ -316,10 +350,16 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests.FileIssue
             Dictionary<IssueField, string> issueFieldPairs = new Dictionary<IssueField, string>();
             IssueInformation issueInfo = new IssueInformation(ruleSource: originalRuleSource);
 
-            PrivateType privateFileIssueHelpers = new PrivateType(typeof(FileIssueHelpers));
-            privateFileIssueHelpers.InvokeStatic("TruncateSelectedFields", issueInfo, issueFieldPairs);
 
-            Assert.AreEqual(4, issueFieldPairs.Count);
+            // Use reflection to call private static method
+            var method = typeof(FileIssueHelpers).GetMethod(
+                "TruncateSelectedFields",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static
+            );
+
+            method.Invoke(null, new object[] { issueInfo, issueFieldPairs });
+
+            Assert.HasCount(4, issueFieldPairs);
             string modifiedRuleSource = issueFieldPairs[IssueField.RuleSource];
             Assert.AreEqual(ruleSourceContent, modifiedRuleSource);
             Assert.IsNull(issueFieldPairs[IssueField.ProcessName]);

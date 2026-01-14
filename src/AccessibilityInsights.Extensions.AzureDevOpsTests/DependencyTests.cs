@@ -36,7 +36,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
 
             foreach (string file in sourceFiles)
             {
-                Assert.IsTrue(targetFiles.Contains(file), file + " is missing");
+                Assert.Contains(file, targetFiles, file + " is missing");
             }
         }
     }

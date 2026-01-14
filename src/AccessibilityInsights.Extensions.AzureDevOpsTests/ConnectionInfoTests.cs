@@ -19,7 +19,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         private static readonly DateTime LastUsage = new DateTime(2018, 12, 23, 16, 19, 30, DateTimeKind.Utc);
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_Uri_FieldsAreCorrect()
         {
             ConnectionInfo info = new ConnectionInfo(TestUri, null, null);
@@ -29,7 +29,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_UriAndProject_FieldsAreCorrect()
         {
             ConnectionInfo info = new ConnectionInfo(TestUri, TestProject, null);
@@ -39,7 +39,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_UriAndTeam_FieldsAreCorrect()
         {
             ConnectionInfo info = new ConnectionInfo(TestUri, null, TestTeam);
@@ -49,7 +49,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_KnownConfigString_MatchesExpectations()
         {
             ConnectionInfo info = new ConnectionInfo(KnownConfigString);
@@ -63,7 +63,7 @@ namespace AccessibilityInsights.Extensions.AzureDevOpsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ToConfigString_MatchesKnownConfigString()
         {
             // Note: This test might break if the serialization order changes
