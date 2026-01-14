@@ -11,7 +11,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
     public class TelemetryClientFactoryUnitTests
     {
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_CreatesObjectWithExpectedProperties()
         {
             TelemetryConfiguration config = new TelemetryConfiguration();

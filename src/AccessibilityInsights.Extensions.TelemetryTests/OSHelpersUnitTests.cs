@@ -60,12 +60,12 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void GetVersion_LiveData_ReturnsDataInCorrectFormat()
         {
             string version = OSHelpers.GetVersion();
             string[] pieces = version.Split('.');
-            Assert.AreEqual(3, pieces.Length);
+            Assert.HasCount(3, pieces);
             int majorVersion = int.Parse(pieces[0]);
             int minorVersion = int.Parse(pieces[1]);
             int build = int.Parse(pieces[2]);

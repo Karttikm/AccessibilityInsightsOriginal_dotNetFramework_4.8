@@ -21,7 +21,7 @@ namespace AccessibilityInsights.ExtensionsTests
         static readonly string ExtensionsExistSearchPattern = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AutoUpdate_ExtensionsDoNotExist_ReturnsNull()
         {
             using (Container container = new Container(ExtensionsDoNotExistSearchPattern))
@@ -31,7 +31,7 @@ namespace AccessibilityInsights.ExtensionsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void AutoUpdate_ExtensionsExist_ReturnsCorrectType()
         {
             using (Container container = new Container(ExtensionsExistSearchPattern))
@@ -43,7 +43,7 @@ namespace AccessibilityInsights.ExtensionsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Telemetry_ExtensionsDoNotExist_ReturnsEmptySet()
         {
             using (Container container = new Container(ExtensionsDoNotExistSearchPattern))
@@ -53,19 +53,19 @@ namespace AccessibilityInsights.ExtensionsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Telemetry_ExtensionsExist_ReturnsCorrectType()
         {
             using (Container container = new Container(ExtensionsExistSearchPattern))
             {
                 List<ITelemetry> telemetry = container.TelemetryClasses.ToList();
-                Assert.AreEqual(1, telemetry.Count);
+                Assert.HasCount(1, telemetry);
                 Assert.IsInstanceOfType(telemetry[0], typeof(DummyTelemetry));
             }
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IssueReportingOptions_ExtensionsDoNotExist_ReturnsNull()
         {
             using (Container container = new Container(ExtensionsDoNotExistSearchPattern))
@@ -77,7 +77,7 @@ namespace AccessibilityInsights.ExtensionsTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void IssueReportingOptions_ExtensionsExist_ReturnsCorrectTypes()
         {
             using (Container container = new Container(ExtensionsExistSearchPattern))
@@ -85,15 +85,15 @@ namespace AccessibilityInsights.ExtensionsTests
                 IEnumerable<IIssueReporting> reportingOptions = container.IssueReportingOptions;
                 Assert.IsNotNull(reportingOptions);
                 List<IIssueReporting> optionList = reportingOptions.ToList();
-                Assert.AreEqual(2, optionList.Count);
+                Assert.HasCount(2, optionList);
                 HashSet<Type> set = new HashSet<Type>
                 {
                     optionList[0].GetType(),
                     optionList[1].GetType(),
                 };
 
-                Assert.IsTrue(set.Contains(typeof(DummyIssueReporting1)));
-                Assert.IsTrue(set.Contains(typeof(DummyIssueReporting2)));
+                Assert.Contains(typeof(DummyIssueReporting1), set);
+                Assert.Contains(typeof(DummyIssueReporting2), set);
             }
         }
     }

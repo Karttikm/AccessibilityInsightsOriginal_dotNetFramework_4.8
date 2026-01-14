@@ -15,14 +15,14 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
     public class AITelemetryTests
     {
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_WrapperIsNull_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new AITelemetry(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new AITelemetry(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_WrapperIsNotNull_DoesNotThrow()
         {
             Mock<ITelemetryClientWrapper> wrapperMock = new Mock<ITelemetryClientWrapper>(MockBehavior.Strict);
@@ -30,7 +30,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishEvent_NonContextPropertiesAreTransient()
         {
             List<EventTelemetry> testEvents = new List<EventTelemetry>();
@@ -60,7 +60,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void PublishEvent_ContextPropertiesArePersistent()
         {
             List<EventTelemetry> testEvents = new List<EventTelemetry>();
@@ -90,7 +90,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_ExceptionIsNull_DoesNotCallWrapper()
         {
             Mock<ITelemetryClientWrapper> wrapperMock = new Mock<ITelemetryClientWrapper>(MockBehavior.Strict);
@@ -101,7 +101,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_ExceptionIsNotNull_CallsWrapper()
         {
             Exception expectedException = new InvalidTimeZoneException("blah");
@@ -132,7 +132,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void ReportException_ThrowsInWrapper_EatsException()
         {
             Exception expectedException = new InvalidTimeZoneException("blah");
@@ -149,7 +149,7 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_CallsWrapper()
         {
             Mock<ITelemetryClientWrapper> wrapperMock = new Mock<ITelemetryClientWrapper>(MockBehavior.Strict);

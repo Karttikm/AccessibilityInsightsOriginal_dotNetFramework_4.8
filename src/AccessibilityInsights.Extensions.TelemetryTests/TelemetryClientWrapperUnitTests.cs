@@ -3,6 +3,7 @@
 using AccessibilityInsights.Extensions.Telemetry;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -13,42 +14,50 @@ namespace AccessibilityInsights.Extensions.TelemetryTests
     public class TelemetryClientWrapperUnitTests
     {
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_ClientIsNull_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TelemetryClientWrapper(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new TelemetryClientWrapper(null));
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void Ctor_ClientIsNotNull_DoesNotThrow()
         {
-            new TelemetryClientWrapper(new TelemetryClient());
+            var telemetryConfig = new TelemetryConfiguration();
+            var client = new TelemetryClient(telemetryConfig);
+            new TelemetryClientWrapper(client);
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TrackEvent_DoesNotThrow()
         {
-            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(new TelemetryClient());
+            var telemetryConfig = new TelemetryConfiguration();
+            var client = new TelemetryClient(telemetryConfig);
+            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(client);
 
             wrapper.TrackEvent(new EventTelemetry());
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void TrackException_DoesNotThrow()
         {
-            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(new TelemetryClient());
+            var telemetryConfig = new TelemetryConfiguration();
+            var client = new TelemetryClient(telemetryConfig);
+            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(client);
 
             wrapper.TrackException(new InvalidOperationException(), new Dictionary<string, string>());
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(1000, CooperativeCancellation = true)]
         public void FlushAndShutDown_DoesNotThrow()
         {
-            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(new TelemetryClient());
+            var telemetryConfig = new TelemetryConfiguration();
+            var client = new TelemetryClient(telemetryConfig);
+            ITelemetryClientWrapper wrapper = new TelemetryClientWrapper(client);
 
             wrapper.FlushAndShutDown();
         }
