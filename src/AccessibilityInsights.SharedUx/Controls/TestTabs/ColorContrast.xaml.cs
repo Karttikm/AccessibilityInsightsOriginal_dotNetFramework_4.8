@@ -259,7 +259,12 @@ namespace AccessibilityInsights.SharedUx.Controls.TestTabs
         {
             try
             {
-                Process.Start(new ProcessStartInfo(target));
+                var psi = new ProcessStartInfo
+                {
+                    FileName = target,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
