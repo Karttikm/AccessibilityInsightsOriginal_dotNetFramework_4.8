@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Actions\Actions.csproj" />
+    <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Automation\Automation.csproj" />
     <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Core\Core.csproj" />
     <ProjectReference Include="..\..\Axe.Windows\axe-windows-2.4.2\src\Desktop\Desktop.csproj" />
     <ProjectReference Include="..\AccessibilityInsights\AccessibilityInsights.csproj" />

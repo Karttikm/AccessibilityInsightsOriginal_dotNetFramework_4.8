@@ -86,7 +86,7 @@ namespace AccessibilityInsights.SharedUxTests.Settings
             ConfigurationModel config = GetDefaultConfig();
 
             Assert.IsTrue(config.AlwaysOnTop);
-            Assert.AreEqual("1.0.", config.AppVersion.Substring(0, 4));
+            Assert.AreEqual("1.1.", config.AppVersion.Substring(0, 4));
             ConfirmEnumerablesMatchExpectations(
                 new int[] { 30005, 30003, 30004, 30009, 30001, 30007, 30006, 30013, 30102, 30101 },
                 config.CoreProperties.ToArray());
@@ -161,7 +161,7 @@ namespace AccessibilityInsights.SharedUxTests.Settings
             bool shouldTestAllChromiumContent = false)
         {
             Assert.IsFalse(config.AlwaysOnTop);
-            Assert.AreEqual("1.0.", config.AppVersion.Substring(0, 4));
+            Assert.AreEqual("1.1.", config.AppVersion.Substring(0, 4));
             Assert.AreNotEqual("1.1.700.1", config.AppVersion);
             Assert.AreEqual(shouldTestAllChromiumContent, config.ShouldTestAllChromiumContent);
 
