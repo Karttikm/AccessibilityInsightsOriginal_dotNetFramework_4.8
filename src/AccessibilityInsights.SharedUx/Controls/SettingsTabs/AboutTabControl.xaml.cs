@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using AccessibilityInsights.SharedUx.Telemetry;
 using AccessibilityInsights.SharedUx.ViewModels;
@@ -42,7 +42,12 @@ namespace AccessibilityInsights.SharedUx.Controls.SettingsTabs
             {
                 if (File.Exists(path))
                 {
-                    Process.Start(path);
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = path,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
                 }
             }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -65,7 +70,12 @@ namespace AccessibilityInsights.SharedUx.Controls.SettingsTabs
 
             try
             {
-                Process.Start(uri.AbsoluteUri);
+                var psi = new ProcessStartInfo
+                {
+                    FileName = uri.AbsoluteUri,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)

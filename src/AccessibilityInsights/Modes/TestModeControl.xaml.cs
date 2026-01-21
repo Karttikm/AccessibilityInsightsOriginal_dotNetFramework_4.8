@@ -472,7 +472,12 @@ namespace AccessibilityInsights.Modes
         {
             try
             {
-                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+                var psi = new ProcessStartInfo
+                {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)

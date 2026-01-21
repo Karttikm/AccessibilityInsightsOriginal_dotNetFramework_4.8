@@ -502,7 +502,11 @@ namespace AccessibilityInsights
 
         private void OnF1(object sender, ExecutedRoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(HelpDocLink));
+            var psi = new ProcessStartInfo(HelpDocLink)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         private void OnF6(object sender, ExecutedRoutedEventArgs e)
@@ -568,7 +572,11 @@ namespace AccessibilityInsights
         /// <param name="e"></param>
         private void btnHelp_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(HelpDocLink));
+            var psi = new ProcessStartInfo(HelpDocLink)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
